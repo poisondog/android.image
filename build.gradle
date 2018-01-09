@@ -1,0 +1,53 @@
+project.group = 'poisondog'
+project.version = '1.0.2'
+
+apply from: 'repositories.gradle'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+
+	dependencies {
+		classpath 'com.android.tools.build:gradle:2.2.1'
+	}
+}
+
+apply plugin: 'com.android.library'
+
+android {
+	compileSdkVersion 24
+	buildToolsVersion "25.0.2"
+
+	defaultConfig {
+		minSdkVersion 14
+		targetSdkVersion 17
+//		multiDexEnabled = true
+	}
+
+	lintOptions {
+		abortOnError false
+	}
+
+//	buildTypes {
+//		release {
+//			minifyEnabled true
+//			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//		}
+//	}
+
+}
+
+dependencies {
+	compile 'com.android.support:appcompat-v7:25.0.+'
+//	compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+//	compile 'com.timehop.stickyheadersrecyclerview:library:0.4.2@aar'
+//	compile 'se.emilsjolander:stickylistheaders:2.7.0'
+//	compile 'com.android.support:design:24.2.0'
+	compile project(':poisondog.commons')
+	compile project(':android.os')
+
+	testCompile "org.robolectric:robolectric:3.0"
+	testCompile 'junit:junit:4.11'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+}
