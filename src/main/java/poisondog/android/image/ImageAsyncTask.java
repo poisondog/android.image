@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 import poisondog.android.os.AsyncTask;
 import poisondog.android.image.R;
+
 /**
  * @author poisondog <poisondog@gmail.com>
  */
@@ -113,8 +114,9 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	 * points to this task as well. Returns null otherwise.
 	 */
 	private ImageView getAttachedImageView() {
+		GetImageAsyncTask mission = new GetImageAsyncTask();
 		final ImageView imageView = mImageViewReference.get();
-		final ImageAsyncTask task = ImageTask.getImageAsyncTask(imageView);
+		final ImageAsyncTask task = mission.execute(imageView);
 
 		if (this == task) {
 			return imageView;

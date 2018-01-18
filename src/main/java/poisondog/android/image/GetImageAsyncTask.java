@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2013 Google Inc.
- * Copyright (C) 2013 Adam Huang
+ * Copyright (C) 2018 Adam Huang <poisondog@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +15,25 @@
  */
 package poisondog.android.image;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import java.lang.ref.WeakReference;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+import poisondog.core.Mission;
 
 /**
  * @author Adam Huang
+ * @since 2018-01-10
  */
-public class AsyncDrawable extends BitmapDrawable {
-	private final WeakReference<ImageAsyncTask> taskReference;
+public class GetImageAsyncTask implements Mission<ImageView> {
 
-	public AsyncDrawable(Resources res, Bitmap bitmap, ImageAsyncTask bitmapWorkerTask) {
-		super(res, bitmap);
-		taskReference = new WeakReference<ImageAsyncTask>(bitmapWorkerTask);
-	}
-
-	public ImageAsyncTask getImageAsyncTask() {
-		return taskReference.get();
+	@Override
+	public ImageAsyncTask execute(ImageView view) {
+		if (view != null) {
+			final Drawable drawable = view.getDrawable();
+			if (drawable instanceof AsyncDrawable) {
+				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+				return asyncDrawable.getImageAsyncTask();
+			}
+		}
+		return null;
 	}
 }

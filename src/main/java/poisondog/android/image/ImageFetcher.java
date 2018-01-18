@@ -30,7 +30,8 @@ import poisondog.vfs.IFile;
 import poisondog.vfs.IFolder;
 
 /**
- * @author poisondog <poisondog@gmail.com>
+ * @author Adam Huang
+ * @since 2013-01-10
  */
 public class ImageFetcher extends ImageResize {
 	private IFolder mDest;

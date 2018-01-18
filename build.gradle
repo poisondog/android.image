@@ -1,8 +1,6 @@
 project.group = 'poisondog'
 project.version = '1.0.2'
 
-apply from: 'repositories.gradle'
-
 buildscript {
 	repositories {
 		jcenter()
@@ -38,13 +36,19 @@ android {
 
 }
 
+repositories {
+	jcenter()
+	maven {
+		url "https://dl.bintray.com/poisondog/poisondog/"
+	}
+}
+
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
 //	compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
 //	compile 'com.timehop.stickyheadersrecyclerview:library:0.4.2@aar'
 //	compile 'se.emilsjolander:stickylistheaders:2.7.0'
 //	compile 'com.android.support:design:24.2.0'
-	compile project(':poisondog.commons')
 	compile project(':android.os')
 
 	testCompile "org.robolectric:robolectric:3.0"

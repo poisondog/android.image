@@ -26,9 +26,7 @@ import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
 import poisondog.vfs.IFile;
 import poisondog.vfs.IFolder;
-/**
- * @author poisondog <poisondog@gmail.com>
- */
+
 public class ImageDiskCache {
 	private static final String MESSAGE_DIGEST_ALGORITHM = "MD5";
 	private static ImageDiskCache instance;

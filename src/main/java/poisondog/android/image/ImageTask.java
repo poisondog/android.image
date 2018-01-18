@@ -24,9 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import poisondog.android.os.AsyncTask;
 
-/**
- * @author poisondog <poisondog@gmail.com>
- */
 public abstract class ImageTask {
 	private boolean mExitTasksEarly = false;
 	private boolean mPauseWork = false;
@@ -37,6 +34,8 @@ public abstract class ImageTask {
 
 	protected ImageTask(Context context) {
 		mResources = context.getResources();
+		mImageCache = new ImageCache(context, context.getExternalCacheDir().getPath() + "/");
+//		mLoadingBitmap = BitmapFactory.decodeResource(mResources, R.drawable.image_loading);
 	}
 
 	protected abstract Bitmap processBitmap(Object data);
@@ -46,36 +45,21 @@ public abstract class ImageTask {
 			return;
 		}
 
-		if (cancelPotentialWork(data, imageView)) {
+		CancelPotentialWork mission = new CancelPotentialWork();
+		if (mission.execute(data, imageView)) {
 			final ImageAsyncTask task = new ImageAsyncTask(this, imageView);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, task));
-//			task.execute(data);
 			task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, data);
 		}
 	}
 
-	public static boolean cancelPotentialWork(Object data, ImageView imageView) {
-		final ImageAsyncTask task = getImageAsyncTask(imageView);
-		if (task != null) {
-			final Object bitmapData = task.getData();
-			if (bitmapData == null || !bitmapData.equals(data)) {
-				task.cancel(true);
-			} else {
-				return false;
+	public void setPauseWork(boolean pauseWork) {
+		synchronized (mPauseWorkLock) {
+			mPauseWork = pauseWork;
+			if (!mPauseWork) {
+				mPauseWorkLock.notifyAll();
 			}
 		}
-		return true;
-	}
-
-	public static ImageAsyncTask getImageAsyncTask(ImageView imageView) {
-		if (imageView != null) {
-			final Drawable drawable = imageView.getDrawable();
-			if (drawable instanceof AsyncDrawable) {
-				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-				return asyncDrawable.getImageAsyncTask();
-			}
-		}
-		return null;
 	}
 
 	public void setLoadingImage(Bitmap bitmap) {
@@ -88,15 +72,6 @@ public abstract class ImageTask {
 
 	public void setImageCache(ImageCache imageCache) {
 		mImageCache = imageCache;
-	}
-
-	public void setPauseWork(boolean pauseWork) {
-		synchronized (mPauseWorkLock) {
-			mPauseWork = pauseWork;
-			if (!mPauseWork) {
-				mPauseWorkLock.notifyAll();
-			}
-		}
 	}
 
 	public ImageCache getImageCache() {
