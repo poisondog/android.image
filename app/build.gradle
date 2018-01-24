@@ -49,6 +49,7 @@ android {
 
 dependencies {
 	compile project(':library')
+	compile project(':android.pager')
 }
 
 configurations {

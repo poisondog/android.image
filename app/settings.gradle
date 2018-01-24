@@ -25,6 +25,9 @@ project(':poisondog.commons').projectDir = new File('../../poisondog.commons/')
 include ':poisondog.core'
 project(':poisondog.core').projectDir = new File('../../poisondog.core/')
 
-include ':android.os'
-project(':android.os').projectDir = new File('../../android.os/')
+include ':android.util'
+project(':android.util').projectDir = new File('../../android.util/')
+
+include ':android.pager'
+project(':android.pager').projectDir = new File('../../android.pager/')
 

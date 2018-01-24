@@ -45,13 +45,6 @@ repositories {
 
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
-//	compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
-//	compile 'com.timehop.stickyheadersrecyclerview:library:0.4.2@aar'
-//	compile 'se.emilsjolander:stickylistheaders:2.7.0'
-//	compile 'com.android.support:design:24.2.0'
-	compile project(':android.os')
-
-	testCompile "org.robolectric:robolectric:3.0"
+	compile project(':android.util')
 	testCompile 'junit:junit:4.11'
-	testCompile 'org.mockito:mockito-all:1.9.5'
 }

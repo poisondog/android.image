@@ -18,6 +18,7 @@ package poisondog.android.image.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -30,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import poisondog.android.image.app.R;
 import poisondog.android.image.ImageFetcher;
+import poisondog.android.util.GetDownloadsDir;
+import poisondog.android.util.GetExternalCacheDir;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.filter.FileFilter;
 import poisondog.vfs.filter.OnlyImage;
@@ -51,7 +54,8 @@ public class MainActivity extends Activity {
 
 		MyAdapter adapter = new MyAdapter(this);
 
-		String download = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/";
+		GetDownloadsDir task = new GetDownloadsDir();
+		String download = task.execute(null);
 		try {
 			IFolder mFolder = (IFolder)FileFactory.getFile(download);
 			FileFilter filter = new FileFilter();
@@ -68,53 +72,67 @@ public class MainActivity extends Activity {
 
 	}
 
-}
-
-class MyAdapter extends BaseAdapter{
-	private Context mContext;
-	private List<IData> mContent;
-	private ImageFetcher mFetcher;
-
-	/**
-	 * Constructor
-	 */
-	public MyAdapter(Context context) {
-		mContext = context;
-		mContent = new LinkedList<IData>();
-		String cache = mContext.getExternalCacheDir().getPath() + "/";
-		try {
-			mFetcher = new ImageFetcher(mContext, 500, 500, cache);
-		} catch(Exception e) {
-			e.printStackTrace();
+	class MyAdapter extends BaseAdapter{
+		private Context mContext;
+		private List<IData> mContent;
+		private ImageFetcher mFetcher;
+		/**
+		 * Constructor
+		 */
+		public MyAdapter(Context context) {
+			mContext = context;
+			mContent = new LinkedList<IData>();
+			String cache = new GetExternalCacheDir().execute(mContext);
+			try {
+				mFetcher = new ImageFetcher(mContext, 500, 500, cache);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
-	}
-	@Override
-	public int getCount() {
-		return mContent.size();
-	}
-	@Override
-	public IData getItem(int position) {
-		return mContent.get(position);
-	}
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ImageView image = new ImageView(mContext);
-		image.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-		try {
-//			mFetcher.setLoadingImage(R.drawable.image_loading);
-			mFetcher.loadImage(getItem(position).getUrl(), image);
-		} catch(Exception e) {
-			e.printStackTrace();
+		@Override
+		public int getCount() {
+			return mContent.size();
 		}
-		return image;
-	}
+		@Override
+		public IData getItem(int position) {
+			return mContent.get(position);
+		}
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			ImageView image = new ImageView(mContext);
+			image.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+			image.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Intent intent = new Intent();
+					intent.setClass(MainActivity.this, PhotoActivity.class);
+					LinkedList<String> datas = new LinkedList<String>();
+					for (IData d : mContent) {
+						try {
+							datas.add(d.getUrl());
+						} catch(Exception e) {
+						}
+					}
+					intent.putExtra("content", datas);
+					intent.putExtra("current", position);
+					startActivity(intent);
+				}
+			});
+			try {
+	//			mFetcher.setLoadingImage(R.drawable.image_loading);
+				mFetcher.loadImage(getItem(position).getUrl(), image);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			return image;
+		}
 
-	public void setContent(List<IData> content) {
-		mContent = content;
-		notifyDataSetChanged();
+		public void setContent(List<IData> content) {
+			mContent = content;
+			notifyDataSetChanged();
+		}
 	}
 }
