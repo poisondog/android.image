@@ -20,11 +20,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import poisondog.android.os.AsyncTask;
+import poisondog.core.Mission;
 
-public abstract class ImageTask {
+public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 	private boolean mExitTasksEarly = false;
 	private boolean mPauseWork = false;
 	private final Object mPauseWorkLock = new Object();
@@ -40,17 +40,24 @@ public abstract class ImageTask {
 
 	protected abstract Bitmap processBitmap(Object data);
 
-	public void loadImage(Object data, ImageView imageView) {
+	@Override
+	public Void execute(ImageTask.Parameter para) {
+		Object data = para.getData();
+		ImageView imageView = para.getView();
 		if (data == null) {
-			return;
+			return null;
 		}
-
 		CancelPotentialWork mission = new CancelPotentialWork();
 		if (mission.execute(data, imageView)) {
 			final ImageAsyncTask task = new ImageAsyncTask(this, imageView);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, task));
 			task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, data);
 		}
+		return null;
+	}
+
+	public void loadImage(Object data, ImageView imageView) {
+		execute(new ImageTask.Parameter(data, imageView));
 	}
 
 	public void setPauseWork(boolean pauseWork) {
@@ -93,4 +100,23 @@ public abstract class ImageTask {
 	public boolean isExitTasksEarly() {
 		return mExitTasksEarly;
 	}
+
+	public static class Parameter {
+		private Object mData;
+		private ImageView mView;
+		/**
+		 * Constructor
+		 */
+		public Parameter(Object data, ImageView imageView) {
+			mData = data;
+			mView = imageView;
+		}
+		public Object getData() {
+			return mData;
+		}
+		public ImageView getView() {
+			return mView;
+		}
+	}
+
 }
