@@ -20,8 +20,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import java.lang.ref.WeakReference;
-import poisondog.android.os.AsyncTask;
 import poisondog.android.image.R;
+import poisondog.android.os.AsyncTask;
+import poisondog.core.Mission;
+import poisondog.core.NoMission;
 
 /**
  * @author poisondog <poisondog@gmail.com>
@@ -30,10 +32,16 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	private Object mData;
 	private final ImageTask mTask;
 	private final WeakReference<ImageView> mImageViewReference;
+	private Mission<Object> mHandler;
 
 	public ImageAsyncTask(ImageTask task, ImageView imageView) {
 		mTask = task;
 		mImageViewReference = new WeakReference<ImageView>(imageView);
+		mHandler = new NoMission<>();
+	}
+
+	public void setHandler(Mission<Object> handler) {
+		mHandler = handler;
 	}
 
 	/**
@@ -89,6 +97,11 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 		// if cancel was called on this task or the "exit early" flag is set then we're done
 		if (isCancelled() || mTask.isExitTasksEarly()) {
 			value = null;
+		}
+
+		try {
+			mHandler.execute(value);
+		} catch(Exception e) {
 		}
 
 		final ImageView imageView = getAttachedImageView();

@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import poisondog.android.os.AsyncTask;
 import poisondog.core.Mission;
+import poisondog.core.NoMission;
 
 public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 	private boolean mExitTasksEarly = false;
@@ -31,11 +32,17 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 	private Resources mResources;
 	private ImageCache mImageCache;
 	private Bitmap mLoadingBitmap;
+	private Mission<Object> mHandler;
 
 	protected ImageTask(Context context) {
 		mResources = context.getResources();
 		mImageCache = new ImageCache(context, context.getExternalCacheDir().getPath() + "/");
+		mHandler = new NoMission<>();
 //		mLoadingBitmap = BitmapFactory.decodeResource(mResources, R.drawable.image_loading);
+	}
+
+	public void setHandler(Mission<Object> handler) {
+		mHandler = handler;
 	}
 
 	protected abstract Bitmap processBitmap(Object data);
@@ -50,6 +57,7 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 		CancelPotentialWork mission = new CancelPotentialWork();
 		if (mission.execute(data, imageView)) {
 			final ImageAsyncTask task = new ImageAsyncTask(this, imageView);
+			task.setHandler(mHandler);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, task));
 			task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, data);
 		}
