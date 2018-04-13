@@ -21,9 +21,11 @@ import android.graphics.Bitmap;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import poisondog.io.CopyFactory;
 import poisondog.io.CopyTask;
 import poisondog.log.Log;
 import poisondog.net.URLUtils;
+import poisondog.util.Pair;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
 import poisondog.vfs.IFile;
@@ -35,10 +37,12 @@ import poisondog.vfs.IFolder;
  */
 public class ImageFetcher extends ImageResize {
 	private IFolder mDest;
+	private CopyFactory mFactory;
 
 	public ImageFetcher(Context context, int imageWidth, int imageHeight, String dest) throws Exception {
 		super(context, imageWidth, imageHeight);
 		setDestination(dest);
+		mFactory = new CopyFactory();
 	}
 
 	public void setDestination(String url) throws Exception {
@@ -46,6 +50,10 @@ public class ImageFetcher extends ImageResize {
 		if (!(file instanceof IFolder))
 			throw new IllegalArgumentException("the destination need folder.");
 		mDest = (IFolder) file;
+	}
+
+	public void setCopyFactory(CopyFactory factory) {
+		mFactory = factory;
 	}
 
 	private InputStream getInputStream(String url) throws Exception {
@@ -68,7 +76,7 @@ public class ImageFetcher extends ImageResize {
 			return super.processBitmap(url);
 		}
 		try{
-			CopyTask task = new CopyTask(getInputStream(url), getOutputStream(mDest.getUrl() + URLUtils.file(url)));
+			CopyTask task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + URLUtils.file(url))));
 			task.transport();
 			return super.processBitmap(mDest.getUrl() + URLUtils.file(url));
 		}catch(IOException e) {
