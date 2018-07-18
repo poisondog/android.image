@@ -45,6 +45,7 @@ repositories {
 
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
-	compile project(':android.util')
+	compile 'poisondog:poisondog.commons:3.6.5'
+	compile 'poisondog:poisondog.android.util:0.0.1@aar'
 	testCompile 'junit:junit:4.11'
 }

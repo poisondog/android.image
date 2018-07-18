@@ -16,12 +16,3 @@ include 'shared'
 include 'api'
 include 'services:webservice'
 */
-
-include ':poisondog.commons'
-project(':poisondog.commons').projectDir = new File('../poisondog.commons/')
-
-include ':poisondog.core'
-project(':poisondog.core').projectDir = new File('../poisondog.core/')
-
-include ':android.util'
-project(':android.util').projectDir = new File('../android.util/')
