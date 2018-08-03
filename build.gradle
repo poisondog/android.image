@@ -3,12 +3,11 @@ project.version = '1.0.2'
 
 buildscript {
 	repositories {
-		google()
 		jcenter()
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.1.0'
+		classpath 'com.android.tools.build:gradle:2.2.1'
 	}
 }
 
@@ -38,7 +37,6 @@ android {
 }
 
 repositories {
-	google()
 	jcenter()
 	maven {
 		url "https://dl.bintray.com/poisondog/poisondog/"
