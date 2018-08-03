@@ -25,7 +25,7 @@ import poisondog.android.image.ImageFetcher;
 import poisondog.android.pager.PageAdapter;
 import poisondog.android.pager.PageView;
 import poisondog.android.util.GetDisplaySize;
-import poisondog.android.util.GetExternalCacheDir;
+import poisondog.android.util.GetExternalCacheFolder;
 import poisondog.core.Mission;
 
 /**
@@ -57,7 +57,7 @@ public class PhotoActivity extends Activity {
 			GetDisplaySize task = new GetDisplaySize();
 			mSize = task.execute(PhotoActivity.this);
 			try{
-				String cache = new GetExternalCacheDir().execute(PhotoActivity.this);
+				String cache = new GetExternalCacheFolder().execute(PhotoActivity.this);
 				mFetcher = new ImageFetcher(PhotoActivity.this, mSize.getWidth(), mSize.getHeight(), cache);
 			}catch(Exception e) {
 				e.printStackTrace();

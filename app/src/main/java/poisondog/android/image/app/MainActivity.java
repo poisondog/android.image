@@ -31,8 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import poisondog.android.image.app.R;
 import poisondog.android.image.ImageFetcher;
-import poisondog.android.util.GetDownloadsDir;
-import poisondog.android.util.GetExternalCacheDir;
+import poisondog.android.util.GetDownloadFolder;
+import poisondog.android.util.GetExternalCacheFolder;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.filter.FileFilter;
 import poisondog.vfs.filter.OnlyImage;
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 
 		MyAdapter adapter = new MyAdapter(this);
 
-		GetDownloadsDir task = new GetDownloadsDir();
+		GetDownloadFolder task = new GetDownloadFolder();
 		String download = task.execute(null);
 		try {
 			IFolder mFolder = (IFolder)FileFactory.getFile(download);
@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 		public MyAdapter(Context context) {
 			mContext = context;
 			mContent = new LinkedList<IData>();
-			String cache = new GetExternalCacheDir().execute(mContext);
+			String cache = new GetExternalCacheFolder().execute(mContext);
 			try {
 				mFetcher = new ImageFetcher(mContext, 500, 500, cache);
 			} catch(Exception e) {

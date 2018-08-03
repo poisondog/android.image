@@ -3,24 +3,28 @@ project.version = '1.0.3'
 
 buildscript {
 	repositories {
+		google()
 		jcenter()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:2.2.1'
+		classpath 'com.android.tools.build:gradle:3.1.0'
 	}
 }
 apply plugin: 'com.android.application'
 
-repositories {
-	jcenter()
-	maven {
-		url "https://dl.bintray.com/poisondog/poisondog/"
+allprojects {
+	repositories {
+		google()
+		jcenter()
+		maven {
+			url "https://dl.bintray.com/poisondog/poisondog/"
+		}
 	}
 }
 
 android {
-	compileSdkVersion 24
-	buildToolsVersion '25.0.2'
+	compileSdkVersion 27
+	buildToolsVersion '27.0.3'
 	defaultConfig {
 		versionCode 4
 		versionName project.version
@@ -54,5 +58,6 @@ dependencies {
 
 configurations {
 	compile.exclude module: 'xml-apis'
+	compile.exclude group: 'commons-logging'
 }
 

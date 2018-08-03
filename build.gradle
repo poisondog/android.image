@@ -3,24 +3,25 @@ project.version = '1.0.2'
 
 buildscript {
 	repositories {
+		google()
 		jcenter()
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:2.2.1'
+		classpath 'com.android.tools.build:gradle:3.1.0'
 	}
 }
 
 apply plugin: 'com.android.library'
 
 android {
-	compileSdkVersion 24
-	buildToolsVersion "25.0.2"
+	compileSdkVersion 27
+	buildToolsVersion '27.0.3'
 
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 17
-//		multiDexEnabled = true
+		multiDexEnabled true
 	}
 
 	lintOptions {
@@ -37,6 +38,7 @@ android {
 }
 
 repositories {
+	google()
 	jcenter()
 	maven {
 		url "https://dl.bintray.com/poisondog/poisondog/"
