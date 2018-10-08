@@ -27,12 +27,15 @@ public class SquareImageView extends ImageView {
 
 	public SquareImageView(Context context) {
 		super(context);
+		setScaleType(ImageView.ScaleType.CENTER_CROP);
 	}
 	public SquareImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		setScaleType(ImageView.ScaleType.CENTER_CROP);
 	}
 	public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		setScaleType(ImageView.ScaleType.CENTER_CROP);
 	}
 
 	@Override
