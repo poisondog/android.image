@@ -3,15 +3,20 @@ project.version = '1.0.3'
 
 buildscript {
 	repositories {
+		google()
 		jcenter()
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:2.2.1'
+		classpath 'com.android.tools.build:gradle:3.1.0'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+		classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 	}
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
 
 android {
 	compileSdkVersion 27
@@ -27,16 +32,10 @@ android {
 		abortOnError false
 	}
 
-//	buildTypes {
-//		release {
-//			minifyEnabled true
-//			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//		}
-//	}
-
 }
 
 repositories {
+	google()
 	jcenter()
 	maven {
 		url "https://dl.bintray.com/poisondog/poisondog/"
@@ -49,3 +48,5 @@ dependencies {
 	compile 'poisondog:poisondog.android.util:0.0.1@aar'
 	testCompile 'junit:junit:4.11'
 }
+
+apply from: 'bintray.gradle'
