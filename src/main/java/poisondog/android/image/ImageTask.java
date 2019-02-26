@@ -59,7 +59,7 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 			final ImageAsyncTask task = new ImageAsyncTask(this, imageView);
 			task.setHandler(mHandler);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, task));
-			task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, data);
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 		}
 		return null;
 	}
