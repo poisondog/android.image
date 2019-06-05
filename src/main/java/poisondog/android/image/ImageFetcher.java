@@ -75,14 +75,21 @@ public class ImageFetcher extends ImageResize {
 		if(URLUtils.scheme(url).equals("file")) {
 			return super.processBitmap(url);
 		}
+		CopyTask task = null;
 		try{
-			CopyTask task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + URLUtils.file(url))));
+			task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + URLUtils.file(url))));
 			task.transport();
 			return super.processBitmap(mDest.getUrl() + URLUtils.file(url));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				task.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
