@@ -85,6 +85,8 @@ public class ImageFetcher extends ImageResize {
 		}catch(Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (task == null)
+				return null;
 			try {
 				task.close();
 			} catch(Exception e) {
