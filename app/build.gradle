@@ -53,11 +53,12 @@ android {
 
 dependencies {
 	compile project(':library')
-	compile project(':android.pager')
+//	compile project(':android.pager')
 }
 
 configurations {
 	compile.exclude module: 'xml-apis'
 	compile.exclude group: 'commons-logging'
+	compile.exclude group: 'com.squareup.okhttp3'
 }
 

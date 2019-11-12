@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,8 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import poisondog.android.image.app.R;
 import poisondog.android.image.ImageFetcher;
+import poisondog.android.log.AndroidLogger;
 import poisondog.android.util.GetDownloadFolder;
 import poisondog.android.util.GetExternalCacheFolder;
+import poisondog.log.Log;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.filter.FileFilter;
 import poisondog.vfs.filter.OnlyImage;
@@ -51,6 +52,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		Log.setSimpleClass(true);
+		Log.setLogger(new AndroidLogger("MySkyBox"));
 
 		MyAdapter adapter = new MyAdapter(this);
 

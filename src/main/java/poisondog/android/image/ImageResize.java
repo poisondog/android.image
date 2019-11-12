@@ -39,6 +39,13 @@ public class ImageResize extends ImageTask {
 		if(!URLUtils.scheme(url).equals("file")) {
 			return null;
 		}
-		return ImageUtil.resize(URLUtils.path(url), reqWidth, reqHeight);
+//		return ImageUtil.resize(URLUtils.path(url), reqWidth, reqHeight);
+		Bitmap bitmap = ImageUtil.resize(URLUtils.path(url), reqWidth, reqHeight);
+//		try {
+//			return ImageUtil.applyOrientation(bitmap, ImageUtil.resolveBitmapOrientation(URLUtils.path(url)));
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+		return bitmap;
 	}
 }

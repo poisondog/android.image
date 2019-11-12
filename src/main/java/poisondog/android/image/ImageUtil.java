@@ -18,11 +18,42 @@ package poisondog.android.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import java.io.InputStream;
+import java.io.IOException;
+
 /**
  * @author Adam Huang <poisondog@gmail.com>
  */
 public class ImageUtil {
+	public static int resolveBitmapOrientation(String path) throws IOException {
+		ExifInterface exif = new ExifInterface(path);
+		return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	}
+
+	public static Bitmap applyOrientation(Bitmap bitmap, int orientation) {
+		int rotate = 0;
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				rotate = 270;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				rotate = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				rotate = 90;
+				break;
+			default:
+				return bitmap;
+		}
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+		Matrix mtx = new Matrix();
+		mtx.postRotate(rotate);
+		return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
+	}
+
 	public static Bitmap resize(String path, int reqWidth, int reqHeight) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
