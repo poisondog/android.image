@@ -18,7 +18,8 @@ package poisondog.android.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import poisondog.net.URLUtils;
+import poisondog.net.UrlUtils;
+
 /**
  * @author poisondog <poisondog@gmail.com>
  */
@@ -36,13 +37,13 @@ public class ImageResize extends ImageTask {
 		if(!(data instanceof String))
 			return null;
 		String url = (String)data;
-		if(!URLUtils.scheme(url).equals("file")) {
+		if(!UrlUtils.scheme(url).equals("file")) {
 			return null;
 		}
-//		return ImageUtil.resize(URLUtils.path(url), reqWidth, reqHeight);
-		Bitmap bitmap = ImageUtil.resize(URLUtils.path(url), reqWidth, reqHeight);
+//		return ImageUtil.resize(UrlUtils.path(url), reqWidth, reqHeight);
+		Bitmap bitmap = ImageUtil.resize(UrlUtils.path(url), reqWidth, reqHeight);
 //		try {
-//			return ImageUtil.applyOrientation(bitmap, ImageUtil.resolveBitmapOrientation(URLUtils.path(url)));
+//			return ImageUtil.applyOrientation(bitmap, ImageUtil.resolveBitmapOrientation(UrlUtils.path(url)));
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}

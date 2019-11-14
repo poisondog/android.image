@@ -93,4 +93,29 @@ public class ImageUtil {
 		}
 		return inSampleSize;
 	}
+
+	public static int getWidth(InputStream input) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+//		BitmapFactory.decodeFile(path, options);
+		BitmapFactory.decodeStream(input, null, options);
+		return options.outWidth;
+	}
+
+	public static int getHeight(InputStream input) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+//		BitmapFactory.decodeFile(path, options);
+		BitmapFactory.decodeStream(input, null, options);
+		return options.outHeight;
+	}
+
+	public static String getType(InputStream input) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+//		BitmapFactory.decodeFile(path, options);
+		BitmapFactory.decodeStream(input, null, options);
+		return options.outMimeType;
+	}
+
 }

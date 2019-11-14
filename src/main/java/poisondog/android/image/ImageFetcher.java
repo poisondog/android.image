@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import poisondog.io.CopyFactory;
 import poisondog.io.CopyTask;
 import poisondog.log.Log;
-import poisondog.net.URLUtils;
+import poisondog.net.UrlUtils;
 import poisondog.util.Pair;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
@@ -58,7 +58,9 @@ public class ImageFetcher extends ImageResize {
 
 	private InputStream getInputStream(String url) throws Exception {
 		IData data = (IData) FileFactory.getFile(url);
-		return data.getInputStream();
+		InputStream result = data.getInputStream();
+//		Log.d("Width: " + ImageUtil.getWidth(result));
+		return result;
 	}
 
 	private OutputStream getOutputStream(String url) throws Exception {
@@ -72,14 +74,14 @@ public class ImageFetcher extends ImageResize {
 			return null;
 		String url = (String)data;
 		Log.i("ImageFetcher URL: " + url);
-		if(URLUtils.scheme(url).equals("file")) {
+		if(UrlUtils.scheme(url).equals("file")) {
 			return super.processBitmap(url);
 		}
 		CopyTask task = null;
 		try{
-			task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + URLUtils.file(url))));
+			task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + UrlUtils.filename(url))));
 			task.transport();
-			return super.processBitmap(mDest.getUrl() + URLUtils.file(url));
+			return super.processBitmap(mDest.getUrl() + UrlUtils.filename(url));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}catch(Exception e) {
