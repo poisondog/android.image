@@ -88,7 +88,7 @@ public class PhotoActivity extends Activity {
 			ImageView image = new ImageView(PhotoActivity.this);
 			image.setLayoutParams(new ViewGroup.LayoutParams(mSize.getWidth(), mSize.getHeight()));
 			LoadingView loading = new LoadingView(PhotoActivity.this);
-			loading.setView(image);
+			loading.setContent(image);
 			loading.setLoading(true);
 //			mFetcher.setCopyFactory(new CustomCopyFactory((IData) FileFactory.getFile(url.toString())));
 			mFetcher.setHandler(loading.stopMission());

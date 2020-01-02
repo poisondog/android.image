@@ -1,5 +1,5 @@
 project.group = 'poisondog'
-project.version = '1.1.0'
+project.version = '1.1.1'
 
 buildscript {
 	repositories {
@@ -45,7 +45,7 @@ repositories {
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
 	compile 'poisondog:poisondog.commons:8.0.0'
-	compile 'poisondog:poisondog.android.util:0.0.6@aar'
+	compile 'poisondog:poisondog.android.util:2.7.1@aar'
 	compile 'poisondog:poisondog.android.pager:0.0.1@aar'
 	testCompile 'junit:junit:4.11'
 }
