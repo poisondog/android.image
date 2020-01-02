@@ -50,4 +50,4 @@ dependencies {
 	testCompile 'junit:junit:4.11'
 }
 
-apply from: 'bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/poisondog/gradle.tool/master/android/bintray.gradle'
