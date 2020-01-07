@@ -25,7 +25,7 @@ import poisondog.android.os.AsyncTask;
 import poisondog.core.Mission;
 import poisondog.core.NoMission;
 
-public abstract class ImageTask implements Mission<ImageTask.Parameter> {
+public abstract class ImageTask implements Mission<ImageParameter> {
 	private boolean mExitTasksEarly = false;
 	private boolean mPauseWork = false;
 	private final Object mPauseWorkLock = new Object();
@@ -48,7 +48,7 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 	protected abstract Bitmap processBitmap(Object data);
 
 	@Override
-	public Void execute(ImageTask.Parameter para) {
+	public Void execute(ImageParameter para) {
 		Object data = para.getData();
 		ImageView imageView = para.getView();
 		if (data == null) {
@@ -65,7 +65,7 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 	}
 
 	public void loadImage(Object data, ImageView imageView) {
-		execute(new ImageTask.Parameter(data, imageView));
+		execute(new ImageParameter(data, imageView));
 	}
 
 	public void setPauseWork(boolean pauseWork) {
@@ -109,22 +109,22 @@ public abstract class ImageTask implements Mission<ImageTask.Parameter> {
 		return mExitTasksEarly;
 	}
 
-	public static class Parameter {
-		private Object mData;
-		private ImageView mView;
-		/**
-		 * Constructor
-		 */
-		public Parameter(Object data, ImageView imageView) {
-			mData = data;
-			mView = imageView;
-		}
-		public Object getData() {
-			return mData;
-		}
-		public ImageView getView() {
-			return mView;
-		}
-	}
+//	public static class Parameter {
+//		private Object mData;
+//		private ImageView mView;
+//		/**
+//		 * Constructor
+//		 */
+//		public Parameter(Object data, ImageView imageView) {
+//			mData = data;
+//			mView = imageView;
+//		}
+//		public Object getData() {
+//			return mData;
+//		}
+//		public ImageView getView() {
+//			return mView;
+//		}
+//	}
 
 }
