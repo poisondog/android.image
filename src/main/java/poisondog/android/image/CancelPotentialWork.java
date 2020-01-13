@@ -36,12 +36,11 @@ public class CancelPotentialWork implements Mission<Object[]> {
 			throw new IllegalArgumentException("second parameter need ImageView class");
 		Object data = para[0];
 		ImageView imageView = (ImageView)para[1];
-		GetImageAsyncTask mission = new GetImageAsyncTask();
-		final ImageAsyncTask task = mission.execute(imageView);
-		if (task != null) {
-			final Object bitmapData = task.getData();
+		final ImageAsyncTask async = ImageUtil.getImageAsyncTask(imageView);
+		if (async != null) {
+			final Object bitmapData = async.getData();
 			if (bitmapData == null || !bitmapData.equals(data)) {
-				task.cancel(true);
+				async.cancel(true);
 			} else {
 				return false;
 			}

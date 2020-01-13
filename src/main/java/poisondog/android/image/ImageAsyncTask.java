@@ -26,7 +26,7 @@ import poisondog.core.Mission;
 import poisondog.core.NoMission;
 
 /**
- * @author poisondog <poisondog@gmail.com>
+ * @author Adam Huang
  */
 public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	private Object mData;
@@ -127,9 +127,8 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	 * points to this task as well. Returns null otherwise.
 	 */
 	private ImageView getAttachedImageView() {
-		GetImageAsyncTask mission = new GetImageAsyncTask();
 		final ImageView imageView = mImageViewReference.get();
-		final ImageAsyncTask task = mission.execute(imageView);
+		final ImageAsyncTask task = ImageUtil.getImageAsyncTask(imageView);
 
 		if (this == task) {
 			return imageView;

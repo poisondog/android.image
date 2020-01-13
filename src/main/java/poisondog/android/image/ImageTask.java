@@ -56,10 +56,10 @@ public abstract class ImageTask implements Mission<ImageParameter> {
 		}
 		CancelPotentialWork mission = new CancelPotentialWork();
 		if (mission.execute(data, imageView)) {
-			final ImageAsyncTask task = new ImageAsyncTask(this, imageView);
-			task.setHandler(mHandler);
-			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, task));
-			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+			final ImageAsyncTask async = new ImageAsyncTask(this, imageView);
+			async.setHandler(mHandler);
+			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, async));
+			async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 		}
 		return null;
 	}
@@ -108,23 +108,5 @@ public abstract class ImageTask implements Mission<ImageParameter> {
 	public boolean isExitTasksEarly() {
 		return mExitTasksEarly;
 	}
-
-//	public static class Parameter {
-//		private Object mData;
-//		private ImageView mView;
-//		/**
-//		 * Constructor
-//		 */
-//		public Parameter(Object data, ImageView imageView) {
-//			mData = data;
-//			mView = imageView;
-//		}
-//		public Object getData() {
-//			return mData;
-//		}
-//		public ImageView getView() {
-//			return mView;
-//		}
-//	}
 
 }

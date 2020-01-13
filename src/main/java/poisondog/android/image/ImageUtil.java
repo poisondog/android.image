@@ -18,8 +18,10 @@ package poisondog.android.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.widget.ImageView;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -116,6 +118,17 @@ public class ImageUtil {
 //		BitmapFactory.decodeFile(path, options);
 		BitmapFactory.decodeStream(input, null, options);
 		return options.outMimeType;
+	}
+
+	public static ImageAsyncTask getImageAsyncTask(ImageView view) {
+		if (view != null) {
+			final Drawable drawable = view.getDrawable();
+			if (drawable instanceof AsyncDrawable) {
+				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+				return asyncDrawable.getImageAsyncTask();
+			}
+		}
+		return null;
 	}
 
 }

@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package poisondog.android.image;
-
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-import poisondog.core.Mission;
-
-/**
- * @author Adam Huang
- * @since 2018-01-10
- */
-public class GetImageAsyncTask implements Mission<ImageView> {
-
-	@Override
-	public ImageAsyncTask execute(ImageView view) {
-		if (view != null) {
-			final Drawable drawable = view.getDrawable();
-			if (drawable instanceof AsyncDrawable) {
-				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-				return asyncDrawable.getImageAsyncTask();
-			}
-		}
-		return null;
-	}
-}
+// TODO Delete it
+//package poisondog.android.image;
+//
+//import android.graphics.drawable.Drawable;
+//import android.widget.ImageView;
+//import poisondog.core.Mission;
+//
+///**
+// * @author Adam Huang
+// * @since 2018-01-10
+// */
+//public class GetImageAsyncTask implements Mission<ImageView> {
+//
+//	@Override
+//	public ImageAsyncTask execute(ImageView view) {
+//		if (view != null) {
+//			final Drawable drawable = view.getDrawable();
+//			if (drawable instanceof AsyncDrawable) {
+//				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+//				return asyncDrawable.getImageAsyncTask();
+//			}
+//		}
+//		return null;
+//	}
+//}
