@@ -40,6 +40,7 @@ public class ImageLoader implements ImageMission {
 	private CopyFactory mFactory;
 	private ImageScale mScale;
 	private CopyTask mTask;
+	private String mUrl;
 
 	public ImageLoader(int imageWidth, int imageHeight, String destUrl) throws Exception {
 		mScale = new ImageScale(imageWidth, imageHeight);
@@ -75,7 +76,8 @@ public class ImageLoader implements ImageMission {
 		if(!(data instanceof String))
 			return null;
 		String url = (String)data;
-		Log.i("ImageFetcher URL: " + url);
+		mUrl = (String)data;
+		Log.i("ImageLoader URL: " + url);
 		if(UrlUtils.scheme(url).equals("file")) {
 			return mScale.execute(url);
 		}
@@ -104,6 +106,11 @@ public class ImageLoader implements ImageMission {
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		mTask.cancel();
+		try {
+			IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(mUrl));
+			f.delete();
+		} catch(Exception e) {
+		}
 		return true;
 	}
 

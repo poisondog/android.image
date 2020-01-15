@@ -16,6 +16,7 @@
 package poisondog.android.image;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import poisondog.android.os.AsyncMissionTask;
 import poisondog.android.os.AsyncTask;
@@ -27,36 +28,46 @@ import poisondog.core.NoMission;
  * @since 2020-01-13
  */
 public class ImageBinder implements Mission<ImagePara> {
-	private Mission<Bitmap> mHandler;
+	private Mission<BitmapDrawable> mHandler;
 
 	/**
 	 * Constructor
 	 */
 	public ImageBinder() {
-		mHandler = new NoMission<Bitmap>();
+		mHandler = new NoMission<BitmapDrawable>();
 	}
 
-	public void setHandler(Mission<Bitmap> handler) {
+	public void setHandler(Mission<BitmapDrawable> handler) {
 		mHandler = handler;
 	}
 
 	@Override
 	public Void execute(ImagePara para) {
 		Object data = para.getData();
-		ImageView imageView = para.getView();
-		ImageMission mission = para.getMission();
+		final ImageView imageView = para.getView();
+		final ImageMission mission = para.getMission();
 		if (mission == null) {
 			return null;
 		}
 		CancelPotentialMission cpm = new CancelPotentialMission();
 		if (cpm.execute(data, imageView)) {
-//			final ImageMission async = new ImageMission(this, imageView);
-//			async.setHandler(mHandler);
-
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, mission));
-//			async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mission);
 
-			AsyncMissionTask task = new AsyncMissionTask(mission, mHandler);
+//			AsyncMissionTask task = new AsyncMissionTask(mission, mHandler);
+//			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+
+			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
+				@Override
+				public BitmapDrawable execute(Object data) throws Exception {
+					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mission.execute(data));
+				}
+			}, new Mission<BitmapDrawable>() {
+				@Override
+				public Void execute(BitmapDrawable bitmap) throws Exception {
+					mHandler.execute(bitmap);
+					return null;
+				}
+			});
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 
 		}
