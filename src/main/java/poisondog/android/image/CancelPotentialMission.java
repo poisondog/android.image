@@ -31,16 +31,27 @@ public class CancelPotentialMission implements Mission<Object[]> {
 	@Override
 	public Boolean execute(Object... para) {
 		if (para.length != 2)
-			throw new IllegalArgumentException("input need two parameter, Object and ImageView");
+			throw new IllegalArgumentException("input need 2 parameter, Object, ImageView and ImageMission");
 		if (!(para[1] instanceof ImageView))
 			throw new IllegalArgumentException("second parameter need ImageView class");
-		ImageMission mission = para[0];
+//		if (!(para[2] instanceof ImageMission))
+//			throw new IllegalArgumentException("third parameter need ImageMission class");
+		Object data = para[0];
 		ImageView imageView = (ImageView)para[1];
-		final ImageMission another = ImageUtil.getImageMission(imageView);
-		if (another != null && !another.equals(mission)) {
-			another.cancel(true);
-		} else {
-			return false;
+//		ImageMission mission = (ImageMission)para[2];
+		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
+		final Object imageObject = ImageUtil.getImageObject(imageView);
+//		if (imageMission != null && !imageMission.equals(mission)) {
+//			imageMission.cancel(true);
+//		} else {
+//			return false;
+//		}
+		if (imageMission != null) {
+			if (imageObject == null || !imageObject.equals(data)) {
+				imageMission.cancel(true);
+			} else {
+				return false;
+			}
 		}
 		return true;
 	}

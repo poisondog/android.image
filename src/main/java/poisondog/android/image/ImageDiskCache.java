@@ -20,14 +20,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.io.IOException;
 import java.io.OutputStream;
+import poisondog.cache.Cache;
 import poisondog.commons.HashFunction;
-import poisondog.net.URLUtils;
+import poisondog.net.UrlUtils;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
 import poisondog.vfs.IFile;
 import poisondog.vfs.IFolder;
 
-public class ImageDiskCache {
+public class ImageDiskCache implements Cache<String> {
 	private static final String MESSAGE_DIGEST_ALGORITHM = "MD5";
 	private static ImageDiskCache instance;
 	private IFolder mCache;
@@ -47,18 +48,24 @@ public class ImageDiskCache {
 	}
 
 	private synchronized String getPath(String key) throws Exception {
-		return URLUtils.path(mCache.getUrl() + HashFunction.md5(key));
+		return UrlUtils.path(mCache.getUrl() + HashFunction.md5(key));
 	}
 
+	@Override
 	public synchronized Bitmap get(String key) throws Exception {
 		return BitmapFactory.decodeFile(getPath(key), new BitmapFactory.Options());
 	}
 
-	public synchronized void put(String key, Bitmap value) throws IOException, Exception {
+	@Override
+	public synchronized void put(String key, Object obj) throws IOException, Exception {
+		if (!(obj instanceof Bitmap))
+			throw new IllegalArgumentException("the input object need Bitmap class");
+		Bitmap value = (Bitmap) obj;
 		IData data = (IData)FileFactory.getFile(getPath(key));
 		data.create();
 		OutputStream output = data.getOutputStream();
 		value.compress(Bitmap.CompressFormat.JPEG, 90, output);
 		output.close();
 	}
+
 }

@@ -26,14 +26,21 @@ import poisondog.core.Mission;
  * @author Adam Huang
  */
 public class MissionDrawable extends BitmapDrawable {
-	private final WeakReference<ImageMission> taskReference;
+	private final WeakReference<Object> mObjectReference;
+	private final WeakReference<ImageMission> mImageMissionReference;
 
-	public MissionDrawable(Resources res, Bitmap bitmap, ImageMission bitmapWorkerMission) {
+	public MissionDrawable(Resources res, Bitmap bitmap, Object obj, ImageMission mission) {
 		super(res, bitmap);
-		taskReference = new WeakReference<ImageMission>(bitmapWorkerMission);
+		mObjectReference = new WeakReference<Object>(obj);
+		mImageMissionReference = new WeakReference<ImageMission>(mission);
 	}
 
 	public ImageMission getImageMission() {
-		return taskReference.get();
+		return mImageMissionReference.get();
 	}
+
+	public Object getObject() {
+		return mObjectReference.get();
+	}
+
 }

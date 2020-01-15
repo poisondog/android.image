@@ -143,4 +143,15 @@ public class ImageUtil {
 		return null;
 	}
 
+	public static Object getImageObject(ImageView view) {
+		if (view != null) {
+			final Drawable drawable = view.getDrawable();
+			if (drawable instanceof MissionDrawable) {
+				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
+				return asyncDrawable.getObject();
+			}
+		}
+		return null;
+	}
+
 }
