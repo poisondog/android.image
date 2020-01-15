@@ -45,10 +45,20 @@ public class ImageBinder implements Mission<ImagePara> {
 	public Void execute(ImagePara para) {
 		Object data = para.getData();
 		final ImageView imageView = para.getView();
-		final ImageMission mission = para.getMission();
-		if (mission == null) {
+		if (data == null || imageView == null) {
 			return null;
 		}
+		final ImageMission mission = para.getMission();
+
+//		final Object imageObject = ImageUtil.getImageObject(imageView);
+//		if (imageObject != null && data != imageObject) {
+//			return null;
+//		}
+//		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
+//		if (imageMission != null && mission != imageMission) {
+//			return null;
+//		}
+
 		CancelPotentialMission cpm = new CancelPotentialMission();
 		if (cpm.execute(data, imageView)) {
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, mission));
@@ -59,12 +69,27 @@ public class ImageBinder implements Mission<ImagePara> {
 			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
 				@Override
 				public BitmapDrawable execute(Object data) throws Exception {
+					if (!imageView.isShown())
+						return null;
+//		final Object imageObject = ImageUtil.getImageObject(imageView);
+//		if (imageObject != null && data != imageObject) {
+//			return null;
+//		}
+//		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
+//		if (imageMission != null && mission != imageMission) {
+//			return null;
+//		}
 					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mission.execute(data));
 				}
 			}, new Mission<BitmapDrawable>() {
 				@Override
 				public Void execute(BitmapDrawable bitmap) throws Exception {
 					mHandler.execute(bitmap);
+					if (bitmap != null) {
+						imageView.setImageDrawable(bitmap);
+					} else {
+						imageView.setImageResource(R.drawable.alert);
+					}
 					return null;
 				}
 			});

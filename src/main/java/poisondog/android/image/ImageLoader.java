@@ -77,7 +77,7 @@ public class ImageLoader implements ImageMission {
 			return null;
 		String url = (String)data;
 		mUrl = (String)data;
-		Log.i("ImageLoader URL: " + url);
+		Log.i("Url: " + url);
 		if(UrlUtils.scheme(url).equals("file")) {
 			return mScale.execute(url);
 		}

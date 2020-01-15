@@ -36,7 +36,7 @@ public class ImagePara {
 		mData = data;
 		mView = imageView;
 		mMission = mission;
-		mLoadingBitmap = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.image_loading);
+//		mLoadingBitmap = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.image_loading);
 	}
 
 	public Object getData() {

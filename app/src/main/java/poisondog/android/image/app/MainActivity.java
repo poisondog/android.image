@@ -30,6 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import poisondog.android.image.app.R;
 import poisondog.android.image.ImageFetcher;
+import poisondog.android.image.ImageLoader;
+import poisondog.android.image.ImageBinder;
+import poisondog.android.image.ImagePara;
+import poisondog.android.image.ImageDiskCache;
 import poisondog.android.log.AndroidLogger;
 import poisondog.android.util.GetDownloadFolder;
 import poisondog.android.util.GetExternalCacheFolder;
@@ -80,15 +84,22 @@ public class MainActivity extends Activity {
 		private Context mContext;
 		private List<IData> mContent;
 		private ImageFetcher mFetcher;
+		private ImageLoader mLoader;
+		private ImageBinder mBinder;
+		private String cache;
 		/**
 		 * Constructor
 		 */
 		public MyAdapter(Context context) {
 			mContext = context;
 			mContent = new LinkedList<IData>();
-			String cache = new GetExternalCacheFolder().execute(mContext);
+			cache = new GetExternalCacheFolder().execute(mContext);
 			try {
 				mFetcher = new ImageFetcher(mContext, 500, 500, cache);
+//				MissionCache mc = new MissionCache(new ImageLoader(500, 500, cache));
+//				mc.setCache(ImageDiskCache.open(cache, 100));
+//				mLoader = new ImageLoader(500, 500, cache);
+				mBinder = new ImageBinder();
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -128,6 +139,7 @@ public class MainActivity extends Activity {
 			try {
 	//			mFetcher.setLoadingImage(R.drawable.image_loading);
 				mFetcher.loadImage(getItem(position).getUrl(), image);
+//				mBinder.execute(new ImagePara(getItem(position).getUrl(), image, new ImageLoader(500, 500, cache)));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

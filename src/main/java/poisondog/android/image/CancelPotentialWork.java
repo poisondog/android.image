@@ -41,6 +41,7 @@ public class CancelPotentialWork implements Mission<Object[]> {
 			final Object bitmapData = async.getData();
 			if (bitmapData == null || !bitmapData.equals(data)) {
 				async.cancel(true);
+				System.out.println("Cancel");
 			} else {
 				return false;
 			}

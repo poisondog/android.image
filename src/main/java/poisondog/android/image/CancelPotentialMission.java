@@ -49,6 +49,7 @@ public class CancelPotentialMission implements Mission<Object[]> {
 		if (imageMission != null) {
 			if (imageObject == null || !imageObject.equals(data)) {
 				imageMission.cancel(true);
+				System.out.println("Cancel");
 			} else {
 				return false;
 			}

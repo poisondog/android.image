@@ -38,6 +38,7 @@ import poisondog.vfs.IFolder;
 public class ImageFetcher extends ImageResize {
 	private IFolder mDest;
 	private CopyFactory mFactory;
+	private String mUrl;
 
 	public ImageFetcher(Context context, int imageWidth, int imageHeight, String dest) throws Exception {
 		super(context, imageWidth, imageHeight);
@@ -73,6 +74,7 @@ public class ImageFetcher extends ImageResize {
 		if(!(data instanceof String))
 			return null;
 		String url = (String)data;
+		mUrl = (String)data;
 		Log.i("ImageFetcher URL: " + url);
 		if(UrlUtils.scheme(url).equals("file")) {
 			return super.processBitmap(url);
