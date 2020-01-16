@@ -17,6 +17,7 @@ package poisondog.android.image;
 
 import android.graphics.Bitmap;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.IOException;
 import java.io.OutputStream;
 import poisondog.core.Mission;
@@ -29,7 +30,6 @@ import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
 import poisondog.vfs.IFile;
 import poisondog.vfs.IFolder;
-import poisondog.concurrent.Cancellable;
 
 /**
  * @author Adam Huang
@@ -89,6 +89,7 @@ public class ImageLoader implements Mission<Object> {
 			return mScale.execute(mDest.getUrl() + UrlUtils.filename(url));
 		}catch(IOException e) {
 			e.printStackTrace();
+		}catch(InterruptedIOException e) {
 		}catch(Exception e) {
 			e.printStackTrace();
 		} finally {
