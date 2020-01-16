@@ -114,7 +114,7 @@ public class ImageLoader implements Mission<Object> {
 //		return true;
 //	}
 
-	public Mission<Object> getClearHander(final Object data) {
+	public Mission<Object> getClearHandler(final Object data) {
 		return new Mission<Object>() {
 			@Override
 			public Void execute(Object none) {

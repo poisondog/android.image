@@ -142,7 +142,7 @@ public class MainActivity extends Activity {
 			try {
 	//			mFetcher.setLoadingImage(R.drawable.image_loading);
 //				mFetcher.loadImage(getItem(position).getUrl(), image);
-				mBinder.setCancel(mLoader.getClearHander(getItem(position).getUrl()));
+				mBinder.setCancel(mLoader.getClearHandler(getItem(position).getUrl()));
 				mBinder.execute(new ImagePara(getItem(position).getUrl(), image));
 			} catch(Exception e) {
 				e.printStackTrace();
