@@ -33,16 +33,22 @@ public abstract class ImageTask implements Mission<ImageParameter> {
 	private ImageCache mImageCache;
 	private Bitmap mLoadingBitmap;
 	private Mission<Object> mHandler;
+	private Mission<Object> mCancel;
 
 	protected ImageTask(Context context) {
 		mResources = context.getResources();
 		mImageCache = new ImageCache(context, context.getExternalCacheDir().getPath() + "/");
 		mHandler = new NoMission<>();
+		mCancel = new NoMission<>();
 //		mLoadingBitmap = BitmapFactory.decodeResource(mResources, R.drawable.image_loading);
 	}
 
 	public void setHandler(Mission<Object> handler) {
 		mHandler = handler;
+	}
+
+	public void setCancel(Mission<Object> handler) {
+		mCancel = handler;
 	}
 
 	protected abstract Bitmap processBitmap(Object data);
@@ -58,6 +64,7 @@ public abstract class ImageTask implements Mission<ImageParameter> {
 //		if (mission.execute(data, imageView)) {
 			final ImageAsyncTask async = new ImageAsyncTask(this, imageView);
 			async.setHandler(mHandler);
+			async.setCancel(mCancel);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, async));
 			async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 //		}

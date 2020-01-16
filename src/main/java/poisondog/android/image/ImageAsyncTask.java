@@ -33,15 +33,21 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	private final ImageTask mTask;
 	private final WeakReference<ImageView> mImageViewReference;
 	private Mission<Object> mHandler;
+	private Mission<Object> mCancel;
 
 	public ImageAsyncTask(ImageTask task, ImageView imageView) {
 		mTask = task;
 		mImageViewReference = new WeakReference<ImageView>(imageView);
 		mHandler = new NoMission<>();
+		mCancel = new NoMission<>();
 	}
 
 	public void setHandler(Mission<Object> handler) {
 		mHandler = handler;
+	}
+
+	public void setCancel(Mission<Object> mission) {
+		mCancel = mission;
 	}
 
 	/**
@@ -117,6 +123,11 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, BitmapDrawable> {
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
+		try {
+			mCancel.execute(mData);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		synchronized (mTask.getPauseWorkLock()) {
 			mTask.getPauseWorkLock().notifyAll();
 		}

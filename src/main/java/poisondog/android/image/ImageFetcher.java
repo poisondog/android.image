@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import poisondog.core.Mission;
 import poisondog.io.CopyFactory;
 import poisondog.io.CopyTask;
 import poisondog.log.Log;
@@ -99,4 +100,21 @@ public class ImageFetcher extends ImageResize {
 		}
 		return null;
 	}
+
+	public Mission<Object> getClearHandler(final Object data) {
+		return new Mission<Object>() {
+			@Override
+			public Void execute(Object none) {
+				String url = (String)data;
+				try {
+					IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(url));
+					f.delete();
+					System.out.println("Delete cancel file");
+				} catch(Exception e) {
+				}
+				return null;
+			}
+		};
+	}
+
 }
