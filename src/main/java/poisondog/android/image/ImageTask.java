@@ -60,14 +60,14 @@ public abstract class ImageTask implements Mission<ImageParameter> {
 		if (data == null) {
 			return null;
 		}
-//		CancelPotentialWork mission = new CancelPotentialWork();
-//		if (mission.execute(data, imageView)) {
+		CancelPotentialWork mission = new CancelPotentialWork();
+		if (mission.execute(data, imageView)) {
 			final ImageAsyncTask async = new ImageAsyncTask(this, imageView);
 			async.setHandler(mHandler);
 			async.setCancel(mCancel);
 			imageView.setImageDrawable(new AsyncDrawable(mResources, mLoadingBitmap, async));
 			async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
-//		}
+		}
 		return null;
 	}
 
