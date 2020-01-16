@@ -23,7 +23,7 @@ import poisondog.net.UrlUtils;
 /**
  * @author poisondog <poisondog@gmail.com>
  */
-public class ImageScale implements ImageMission {
+public class ImageScale implements Mission<Object> {
 	private int reqWidth;
 	private int reqHeight;
 
@@ -50,9 +50,9 @@ public class ImageScale implements ImageMission {
 		return bitmap;
 	}
 
-	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-		return true;
-	}
+//	@Override
+//	public boolean cancel(boolean mayInterruptIfRunning) {
+//		return true;
+//	}
 
 }

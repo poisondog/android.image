@@ -22,5 +22,5 @@ import poisondog.core.Mission;
  * @author Adam Huang
  * @since 2020-01-13
  */
-public interface ImageMission extends Mission<Object>, Cancellable {
-}
+//public interface ImageMission extends Mission<Object>, Cancellable {
+//}

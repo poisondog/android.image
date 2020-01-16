@@ -48,37 +48,17 @@ public class ImageBinder implements Mission<ImagePara> {
 		if (data == null || imageView == null) {
 			return null;
 		}
-		final ImageMission mission = para.getMission();
+		final Mission<Object> mission = para.getMission();
 
-//		final Object imageObject = ImageUtil.getImageObject(imageView);
-//		if (imageObject != null && data != imageObject) {
-//			return null;
-//		}
-//		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
-//		if (imageMission != null && mission != imageMission) {
-//			return null;
-//		}
-
-		CancelPotentialMission cpm = new CancelPotentialMission();
-		if (cpm.execute(data, imageView)) {
+//		CancelPotentialMission cpm = new CancelPotentialMission();
+//		if (cpm.execute(data, imageView)) {
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, mission));
-
-//			AsyncMissionTask task = new AsyncMissionTask(mission, mHandler);
-//			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 
 			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
 				@Override
 				public BitmapDrawable execute(Object data) throws Exception {
 					if (!imageView.isShown())
 						return null;
-//		final Object imageObject = ImageUtil.getImageObject(imageView);
-//		if (imageObject != null && data != imageObject) {
-//			return null;
-//		}
-//		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
-//		if (imageMission != null && mission != imageMission) {
-//			return null;
-//		}
 					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mission.execute(data));
 				}
 			}, new Mission<BitmapDrawable>() {
@@ -95,7 +75,7 @@ public class ImageBinder implements Mission<ImagePara> {
 			});
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
 
-		}
+//		}
 		return null;
 	}
 

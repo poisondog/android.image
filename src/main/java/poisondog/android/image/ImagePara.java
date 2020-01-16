@@ -15,9 +15,10 @@
  */
 package poisondog.android.image;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
-import android.graphics.Bitmap;
+import poisondog.core.Mission;
 
 /**
  * @author Adam Huang
@@ -26,13 +27,13 @@ import android.graphics.Bitmap;
 public class ImagePara {
 	private Object mData;
 	private ImageView mView;
-	private ImageMission mMission;
+	private Mission<Object> mMission;
 	private Bitmap mLoadingBitmap;
 
 	/**
 	 * Constructor
 	 */
-	public ImagePara(Object data, ImageView imageView, ImageMission mission) {
+	public ImagePara(Object data, ImageView imageView, Mission<Object> mission) {
 		mData = data;
 		mView = imageView;
 		mMission = mission;
@@ -47,7 +48,7 @@ public class ImagePara {
 		return mView;
 	}
 
-	public ImageMission getMission() {
+	public Mission<Object> getMission() {
 		return mMission;
 	}
 

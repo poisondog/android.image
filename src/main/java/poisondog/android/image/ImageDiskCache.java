@@ -37,6 +37,13 @@ public class ImageDiskCache implements Cache<String> {
 		mCache = folder;
 	}
 
+	private ImageDiskCache(String folder) throws Exception {
+		IFile file = FileFactory.getFile(folder);
+		if (!(file instanceof IFolder))
+			throw new IllegalArgumentException("this input need folder");
+		mCache = (IFolder)file;
+	}
+
 	public synchronized static ImageDiskCache open(String folder, int size) throws Exception {
 		if(instance != null)
 			return instance;

@@ -35,7 +35,7 @@ import poisondog.concurrent.Cancellable;
  * @author Adam Huang
  * @since 2020-01-08
  */
-public class ImageLoader implements ImageMission {
+public class ImageLoader implements Mission<Object> {
 	private IFolder mDest;
 	private CopyFactory mFactory;
 	private ImageScale mScale;
@@ -103,15 +103,15 @@ public class ImageLoader implements ImageMission {
 		return null;
 	}
 
-	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-		mTask.cancel();
-		try {
-			IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(mUrl));
-			f.delete();
-		} catch(Exception e) {
-		}
-		return true;
-	}
+//	@Override
+//	public boolean cancel(boolean mayInterruptIfRunning) {
+//		mTask.cancel();
+//		try {
+//			IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(mUrl));
+//			f.delete();
+//		} catch(Exception e) {
+//		}
+//		return true;
+//	}
 
 }
