@@ -21,22 +21,29 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import java.lang.ref.WeakReference;
 import poisondog.core.Mission;
+import poisondog.android.os.AsyncMissionTask;
 
 /**
  * @author Adam Huang
  */
 public class MissionDrawable extends BitmapDrawable {
 	private final WeakReference<Object> mObjectReference;
-	private final WeakReference<Mission<Object>> mImageMissionReference;
+//	private final WeakReference<Mission<Object>> mImageMissionReference;
+	private final WeakReference<AsyncMissionTask> mTaskReference;
 
-	public MissionDrawable(Resources res, Bitmap bitmap, Object obj, Mission<Object> mission) {
+	public MissionDrawable(Resources res, Bitmap bitmap, Object obj, AsyncMissionTask task) {
 		super(res, bitmap);
 		mObjectReference = new WeakReference<Object>(obj);
-		mImageMissionReference = new WeakReference<Mission<Object>>(mission);
+//		mImageMissionReference = new WeakReference<Mission<Object>>(mission);
+		mTaskReference = new WeakReference<AsyncMissionTask>(task);
 	}
 
-	public Mission<Object> getImageMission() {
-		return mImageMissionReference.get();
+//	public Mission<Object> getImageMission() {
+//		return mImageMissionReference.get();
+//	}
+
+	public AsyncMissionTask getImageTask() {
+		return mTaskReference.get();
 	}
 
 	public Object getObject() {

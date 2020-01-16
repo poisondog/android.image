@@ -16,44 +16,46 @@
 package poisondog.android.image;
 
 import android.widget.ImageView;
+import poisondog.android.os.AsyncMissionTask;
 import poisondog.core.Mission;
 
 /**
  * @author Adam Huang
  * @since 2018-01-10
  */
-//public class CancelPotentialMission implements Mission<Object[]> {
-//
-//	/**
-//	 * para[0] is Object class
-//	 * para[1] is ImageView class
-//	 */
-//	@Override
-//	public Boolean execute(Object... para) {
-//		if (para.length != 2)
-//			throw new IllegalArgumentException("input need 2 parameter, Object, ImageView and ImageMission");
-//		if (!(para[1] instanceof ImageView))
-//			throw new IllegalArgumentException("second parameter need ImageView class");
-////		if (!(para[2] instanceof ImageMission))
-////			throw new IllegalArgumentException("third parameter need ImageMission class");
-//		Object data = para[0];
-//		ImageView imageView = (ImageView)para[1];
-////		ImageMission mission = (ImageMission)para[2];
+public class CancelPotentialMission implements Mission<Object[]> {
+
+	/**
+	 * para[0] is Object class
+	 * para[1] is ImageView class
+	 */
+	@Override
+	public Boolean execute(Object... para) {
+		if (para.length != 2)
+			throw new IllegalArgumentException("input need 2 parameter, Object, ImageView and ImageMission");
+		if (!(para[1] instanceof ImageView))
+			throw new IllegalArgumentException("second parameter need ImageView class");
+//		if (!(para[2] instanceof ImageMission))
+//			throw new IllegalArgumentException("third parameter need ImageMission class");
+		Object data = para[0];
+		ImageView imageView = (ImageView)para[1];
+//		ImageMission mission = (ImageMission)para[2];
 //		final ImageMission imageMission = ImageUtil.getImageMission(imageView);
-//		final Object imageObject = ImageUtil.getImageObject(imageView);
-////		if (imageMission != null && !imageMission.equals(mission)) {
-////			imageMission.cancel(true);
-////		} else {
-////			return false;
-////		}
-//		if (imageMission != null) {
-//			if (imageObject == null || !imageObject.equals(data)) {
-//				imageMission.cancel(true);
-//				System.out.println("Cancel");
-//			} else {
-//				return false;
-//			}
+		final AsyncMissionTask task = ImageUtil.getImageTask(imageView);
+		final Object imageObject = ImageUtil.getImageObject(imageView);
+//		if (imageMission != null && !imageMission.equals(mission)) {
+//			imageMission.cancel(true);
+//		} else {
+//			return false;
 //		}
-//		return true;
-//	}
-//}
+		if (task != null) {
+			if (imageObject == null || !imageObject.equals(data)) {
+				task.cancel(true);
+				System.out.println("Cancel");
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+}

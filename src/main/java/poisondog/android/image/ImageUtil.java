@@ -24,7 +24,7 @@ import android.media.ExifInterface;
 import android.widget.ImageView;
 import java.io.InputStream;
 import java.io.IOException;
-import poisondog.core.Mission;
+import poisondog.android.os.AsyncMissionTask;
 
 /**
  * @author Adam Huang <poisondog@gmail.com>
@@ -132,12 +132,12 @@ public class ImageUtil {
 		return null;
 	}
 
-	public static Mission<Object> getImageMission(ImageView view) {
+	public static AsyncMissionTask getImageTask(ImageView view) {
 		if (view != null) {
 			final Drawable drawable = view.getDrawable();
 			if (drawable instanceof MissionDrawable) {
 				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
-				return asyncDrawable.getImageMission();
+				return asyncDrawable.getImageTask();
 			}
 		}
 		return null;
