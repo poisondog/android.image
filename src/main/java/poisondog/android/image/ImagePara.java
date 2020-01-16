@@ -27,16 +27,14 @@ import poisondog.core.Mission;
 public class ImagePara {
 	private Object mData;
 	private ImageView mView;
-	private Mission<Object> mMission;
 	private Bitmap mLoadingBitmap;
 
 	/**
 	 * Constructor
 	 */
-	public ImagePara(Object data, ImageView imageView, Mission<Object> mission) {
+	public ImagePara(Object data, ImageView imageView) {
 		mData = data;
 		mView = imageView;
-		mMission = mission;
 //		mLoadingBitmap = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.image_loading);
 	}
 
@@ -46,10 +44,6 @@ public class ImagePara {
 
 	public ImageView getView() {
 		return mView;
-	}
-
-	public Mission<Object> getMission() {
-		return mMission;
 	}
 
 	public Bitmap getLoadingBitmap() {

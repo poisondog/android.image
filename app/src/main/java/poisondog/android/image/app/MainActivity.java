@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import poisondog.android.image.app.R;
-import poisondog.android.image.ImageBinder;
+import poisondog.android.image.ImageWorker;
 import poisondog.android.image.ImageDiskCache;
 import poisondog.android.image.ImageFetcher;
 import poisondog.android.image.ImageLoader;
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 		private List<IData> mContent;
 		private ImageFetcher mFetcher;
 		private Mission<Object> mLoader;
-		private ImageBinder mBinder;
+		private ImageWorker mBinder;
 		private String cache;
 		/**
 		 * Constructor
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 				mc.setCache(ImageDiskCache.open(cache, 100));
 				mLoader = mc;
 //				mLoader = new ImageLoader(500, 500, cache);
-				mBinder = new ImageBinder();
+				mBinder = new ImageWorker(mLoader);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -142,7 +142,7 @@ public class MainActivity extends Activity {
 			try {
 	//			mFetcher.setLoadingImage(R.drawable.image_loading);
 //				mFetcher.loadImage(getItem(position).getUrl(), image);
-				mBinder.execute(new ImagePara(getItem(position).getUrl(), image, mLoader));
+				mBinder.execute(new ImagePara(getItem(position).getUrl(), image));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

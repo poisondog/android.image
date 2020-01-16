@@ -27,13 +27,15 @@ import poisondog.core.NoMission;
  * @author Adam Huang
  * @since 2020-01-13
  */
-public class ImageBinder implements Mission<ImagePara> {
+public class ImageWorker implements Mission<ImagePara> {
+	private Mission<Object> mMission;
 	private Mission<BitmapDrawable> mHandler;
 
 	/**
 	 * Constructor
 	 */
-	public ImageBinder() {
+	public ImageWorker(Mission<Object> mission) {
+		mMission = mission;
 		mHandler = new NoMission<BitmapDrawable>();
 	}
 
@@ -48,18 +50,18 @@ public class ImageBinder implements Mission<ImagePara> {
 		if (data == null || imageView == null) {
 			return null;
 		}
-		final Mission<Object> mission = para.getMission();
+//		final Mission<Object> mission = para.getMission();
 
 //		CancelPotentialMission cpm = new CancelPotentialMission();
 //		if (cpm.execute(data, imageView)) {
-			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, mission));
+			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, mMission));
 
 			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
 				@Override
 				public BitmapDrawable execute(Object data) throws Exception {
 					if (!imageView.isShown())
 						return null;
-					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mission.execute(data));
+					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mMission.execute(data));
 				}
 			}, new Mission<BitmapDrawable>() {
 				@Override
