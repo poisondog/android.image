@@ -87,9 +87,9 @@ public class ImageLoader implements Mission<Object> {
 			while(mTask.stepWrite() && !mTask.isCancelled());
 
 			return mScale.execute(mDest.getUrl() + UrlUtils.filename(url));
+		}catch(InterruptedIOException e) {
 		}catch(IOException e) {
 			e.printStackTrace();
-		}catch(InterruptedIOException e) {
 		}catch(Exception e) {
 			e.printStackTrace();
 		} finally {
