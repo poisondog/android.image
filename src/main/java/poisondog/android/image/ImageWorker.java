@@ -58,9 +58,10 @@ public class ImageWorker implements Mission<ImagePara> {
 
 			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
 				@Override
-				public BitmapDrawable execute(Object data) throws Exception {
+				public BitmapDrawable execute(Object none) throws Exception {
 					if (!imageView.isShown())
 						return null;
+					Object data = ImageUtil.getImageObject(imageView);
 					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mMission.execute(data));
 				}
 			}, new Mission<BitmapDrawable>() {
@@ -75,7 +76,7 @@ public class ImageWorker implements Mission<ImagePara> {
 					return null;
 				}
 			});
-			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
 //		}
 		return null;

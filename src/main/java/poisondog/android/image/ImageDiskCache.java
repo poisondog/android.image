@@ -44,7 +44,7 @@ public class ImageDiskCache implements Cache<String> {
 		mCache = (IFolder)file;
 	}
 
-	public synchronized static ImageDiskCache open(String folder, int size) throws Exception {
+	public synchronized static ImageDiskCache open(String folder) throws Exception {
 		if(instance != null)
 			return instance;
 		IFile file = FileFactory.getFile(folder);
@@ -55,6 +55,8 @@ public class ImageDiskCache implements Cache<String> {
 	}
 
 	private synchronized String getPath(String key) throws Exception {
+		if (key == null)
+			return "";
 		return UrlUtils.path(mCache.getUrl() + HashFunction.md5(key));
 	}
 

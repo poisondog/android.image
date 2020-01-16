@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 			try {
 				mFetcher = new ImageFetcher(mContext, 500, 500, cache);
 				MissionCache mc = new MissionCache(new ImageLoader(500, 500, cache));
-				mc.setCache(ImageDiskCache.open(cache, 100));
+				mc.setCache(ImageDiskCache.open(cache));
 				mLoader = mc;
 //				mLoader = new ImageLoader(500, 500, cache);
 				mBinder = new ImageWorker(mLoader);

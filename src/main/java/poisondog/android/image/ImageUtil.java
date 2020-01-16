@@ -132,26 +132,26 @@ public class ImageUtil {
 		return null;
 	}
 
-//	private static Mission<Object> getImageMission(ImageView view) {
-//		if (view != null) {
-//			final Drawable drawable = view.getDrawable();
-//			if (drawable instanceof MissionDrawable) {
-//				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
-//				return asyncDrawable.getImageMission();
-//			}
-//		}
-//		return null;
-//	}
+	public static Mission<Object> getImageMission(ImageView view) {
+		if (view != null) {
+			final Drawable drawable = view.getDrawable();
+			if (drawable instanceof MissionDrawable) {
+				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
+				return asyncDrawable.getImageMission();
+			}
+		}
+		return null;
+	}
 
-//	private static Object getImageObject(ImageView view) {
-//		if (view != null) {
-//			final Drawable drawable = view.getDrawable();
-//			if (drawable instanceof MissionDrawable) {
-//				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
-//				return asyncDrawable.getObject();
-//			}
-//		}
-//		return null;
-//	}
+	public static Object getImageObject(ImageView view) {
+		if (view != null) {
+			final Drawable drawable = view.getDrawable();
+			if (drawable instanceof MissionDrawable) {
+				final MissionDrawable asyncDrawable = (MissionDrawable) drawable;
+				return asyncDrawable.getObject();
+			}
+		}
+		return null;
+	}
 
 }

@@ -56,7 +56,7 @@ public class ImageCache {
 		@Override
 		protected Void doInBackground(String... params) {
 			try{
-				mImageDiskCache = ImageDiskCache.open(params[0], DISK_CACHE_SIZE);
+				mImageDiskCache = ImageDiskCache.open(params[0]);
 			}catch(Exception e) {
 			}
 			return null;
