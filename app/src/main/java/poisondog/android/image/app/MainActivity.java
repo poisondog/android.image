@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 		private Context mContext;
 		private List<IData> mContent;
 		private ImageFetcher mFetcher;
-		private Mission<Object> mLoader;
+		private ImageLoader mLoader;
 		private ImageWorker mBinder;
 		private String cache;
 		/**
@@ -98,11 +98,11 @@ public class MainActivity extends Activity {
 			cache = new GetExternalCacheFolder().execute(mContext);
 			try {
 				mFetcher = new ImageFetcher(mContext, 500, 500, cache);
-				MissionCache mc = new MissionCache(new ImageLoader(500, 500, cache));
+				mLoader = new ImageLoader(500, 500, cache);
+				MissionCache mc = new MissionCache(mLoader);
 				mc.setCache(ImageDiskCache.open(cache));
-				mLoader = mc;
 //				mLoader = new ImageLoader(500, 500, cache);
-				mBinder = new ImageWorker(mLoader);
+				mBinder = new ImageWorker(mc);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -142,6 +142,7 @@ public class MainActivity extends Activity {
 			try {
 	//			mFetcher.setLoadingImage(R.drawable.image_loading);
 //				mFetcher.loadImage(getItem(position).getUrl(), image);
+				mBinder.setCancel(mLoader.getClearHander(getItem(position).getUrl()));
 				mBinder.execute(new ImagePara(getItem(position).getUrl(), image));
 			} catch(Exception e) {
 				e.printStackTrace();

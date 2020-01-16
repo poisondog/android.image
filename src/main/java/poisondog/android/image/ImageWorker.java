@@ -30,6 +30,7 @@ import poisondog.core.NoMission;
 public class ImageWorker implements Mission<ImagePara> {
 	private Mission<Object> mMission;
 	private Mission<BitmapDrawable> mHandler;
+	private Mission<Object> mCancel;
 
 	/**
 	 * Constructor
@@ -37,10 +38,15 @@ public class ImageWorker implements Mission<ImagePara> {
 	public ImageWorker(Mission<Object> mission) {
 		mMission = mission;
 		mHandler = new NoMission<BitmapDrawable>();
+		mCancel = new NoMission<Object>();
 	}
 
 	public void setHandler(Mission<BitmapDrawable> handler) {
 		mHandler = handler;
+	}
+
+	public void setCancel(Mission<Object> cancel) {
+		mCancel = cancel;
 	}
 
 	@Override
@@ -74,6 +80,7 @@ public class ImageWorker implements Mission<ImagePara> {
 					return null;
 				}
 			});
+			task.setCancelMission(mCancel);
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, task));
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 

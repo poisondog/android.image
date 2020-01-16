@@ -114,4 +114,20 @@ public class ImageLoader implements Mission<Object> {
 //		return true;
 //	}
 
+	public Mission<Object> getClearHander(final Object data) {
+		return new Mission<Object>() {
+			@Override
+			public Void execute(Object none) {
+				String url = (String)data;
+				try {
+					IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(url));
+					f.delete();
+					System.out.println("Delete cancel file");
+				} catch(Exception e) {
+				}
+				return null;
+			}
+		};
+	}
+
 }

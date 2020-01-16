@@ -62,13 +62,18 @@ public class ImageDiskCache implements Cache<String> {
 
 	@Override
 	public synchronized Bitmap get(String key) throws Exception {
+		IFile file = FileFactory.getFile(getPath(key));
+		if (file == null || !file.isExists())
+			return null;
 		return BitmapFactory.decodeFile(getPath(key), new BitmapFactory.Options());
 	}
 
 	@Override
 	public synchronized void put(String key, Object obj) throws IOException, Exception {
+		if (obj == null)
+			return;
 		if (!(obj instanceof Bitmap))
-			throw new IllegalArgumentException("the input object need Bitmap class");
+			throw new IllegalArgumentException("the input object need Bitmap class, but it is " + obj.getClass());
 		Bitmap value = (Bitmap) obj;
 		IData data = (IData)FileFactory.getFile(getPath(key));
 		data.create();
