@@ -74,8 +74,8 @@ public class ImageWorker implements Mission<ImagePara> {
 					mHandler.execute(bitmap);
 					if (bitmap != null) {
 						imageView.setImageDrawable(bitmap);
-					} else {
-						imageView.setImageResource(R.drawable.alert);
+//					} else {
+//						imageView.setImageResource(R.drawable.alert);
 					}
 					return null;
 				}
