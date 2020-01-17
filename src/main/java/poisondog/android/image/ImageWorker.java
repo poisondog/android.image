@@ -18,10 +18,16 @@ package poisondog.android.image;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
+import java.util.concurrent.Executor;
 import poisondog.android.os.AsyncMissionTask;
 import poisondog.android.os.AsyncTask;
+import poisondog.concurrent.ThreadPool;
 import poisondog.core.Mission;
 import poisondog.core.NoMission;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Adam Huang
@@ -31,6 +37,9 @@ public class ImageWorker implements Mission<ImagePara> {
 	private Mission<Object> mMission;
 	private Mission<BitmapDrawable> mHandler;
 	private Mission<Object> mCancel;
+	private Executor mExecutor;
+//	private final Object mPauseWorkLock = new Object();
+	private Boolean mPauseWork = false;
 
 	/**
 	 * Constructor
@@ -39,6 +48,10 @@ public class ImageWorker implements Mission<ImagePara> {
 		mMission = mission;
 		mHandler = new NoMission<BitmapDrawable>();
 		mCancel = new NoMission<Object>();
+//		mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
+		mExecutor = new ThreadPool().getExecutor();
+//		mExecutor = new ThreadPoolExecutor(2, 2, 60000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+//		mExecutor = new ThreadPoolExecutor(2, 2, 60000L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>());
 	}
 
 	public void setHandler(Mission<BitmapDrawable> handler) {
@@ -49,10 +62,14 @@ public class ImageWorker implements Mission<ImagePara> {
 		mCancel = cancel;
 	}
 
+	public void setExecutor(Executor executor) {
+		mExecutor = executor;
+	}
+
 	@Override
 	public Void execute(ImagePara para) {
 		Object data = para.getData();
-		final ImageView imageView = para.getView();
+		ImageView imageView = para.getView();
 		if (data == null || imageView == null) {
 			return null;
 		}
@@ -60,32 +77,57 @@ public class ImageWorker implements Mission<ImagePara> {
 
 		CancelPotentialMission cpm = new CancelPotentialMission();
 		if (cpm.execute(data, imageView)) {
-			AsyncMissionTask task = new AsyncMissionTask(new Mission<Object>() {
-				@Override
-				public BitmapDrawable execute(Object none) throws Exception {
-					if (!imageView.isShown())
-						return null;
-					Object data = ImageUtil.getImageObject(imageView);
-					return new RecyclingBitmapDrawable(imageView.getContext().getResources(), (Bitmap)mMission.execute(data));
-				}
-			}, new Mission<BitmapDrawable>() {
-				@Override
-				public Void execute(BitmapDrawable bitmap) throws Exception {
-					mHandler.execute(bitmap);
-					if (bitmap != null) {
-						imageView.setImageDrawable(bitmap);
-//					} else {
-//						imageView.setImageResource(R.drawable.alert);
-					}
-					return null;
-				}
-			});
+			AsyncMissionTask task = new AsyncMissionTask(new ProcessBitmap(), new UpdateImageView(imageView));
 			task.setCancelMission(mCancel);
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, task));
-			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+			task.executeOnExecutor(mExecutor, imageView);
 
+//			try {
+//				Thread.sleep(10L);
+//			} catch(Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 		return null;
+	}
+
+	class ProcessBitmap implements Mission<ImageView> {
+		@Override
+		public BitmapDrawable execute(ImageView image) throws Exception {
+			if (!image.isShown())
+				return null;
+
+			synchronized (mPauseWork) {
+				try {
+					while (mPauseWork)
+						mPauseWork.wait();
+				} catch (InterruptedException e) {}
+				mPauseWork = true;
+				Object data = ImageUtil.getImageObject(image);
+				RecyclingBitmapDrawable result = new RecyclingBitmapDrawable(image.getContext().getResources(), (Bitmap)mMission.execute(data));
+				mPauseWork = false;
+				mPauseWork.notifyAll();
+				return result;
+			}
+
+		}
+	}
+
+	class UpdateImageView implements Mission<BitmapDrawable> {
+		private ImageView imageView;
+		public UpdateImageView(ImageView image) {
+			imageView = image;
+		}
+		@Override
+		public Void execute(BitmapDrawable bitmap) throws Exception {
+			mHandler.execute(bitmap);
+			if (bitmap != null) {
+				imageView.setImageDrawable(bitmap);
+//			} else {
+//				imageView.setImageResource(R.drawable.alert);
+			}
+			return null;
+		}
 	}
 
 }
