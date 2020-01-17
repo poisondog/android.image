@@ -30,32 +30,6 @@ import poisondog.android.os.AsyncMissionTask;
  * @author Adam Huang <poisondog@gmail.com>
  */
 public class ImageUtil {
-	public static int resolveBitmapOrientation(String path) throws IOException {
-		ExifInterface exif = new ExifInterface(path);
-		return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-	}
-
-	public static Bitmap applyOrientation(Bitmap bitmap, int orientation) {
-		int rotate = 0;
-		switch (orientation) {
-			case ExifInterface.ORIENTATION_ROTATE_270:
-				rotate = 270;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_180:
-				rotate = 180;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_90:
-				rotate = 90;
-				break;
-			default:
-				return bitmap;
-		}
-		int w = bitmap.getWidth();
-		int h = bitmap.getHeight();
-		Matrix mtx = new Matrix();
-		mtx.postRotate(rotate);
-		return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
-	}
 
 	public static Bitmap resize(String path, int reqWidth, int reqHeight) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -152,6 +126,83 @@ public class ImageUtil {
 			}
 		}
 		return null;
+	}
+
+	public static int resolveBitmapOrientation(String path) throws IOException {
+		ExifInterface exif = new ExifInterface(path);
+		return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	}
+
+	public static int resolveBitmapOrientation(InputStream input) throws IOException {
+		ExifInterface exif = new ExifInterface(input);
+		return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	}
+
+	public static Bitmap applyOrientation(Bitmap bitmap, int orientation) {
+		int rotate = 0;
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				rotate = 270;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				rotate = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				rotate = 90;
+				break;
+			default:
+				return bitmap;
+		}
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+		Matrix mtx = new Matrix();
+		mtx.postRotate(rotate);
+		return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
+	}
+
+	/**
+	 * @param path 圖片絕對路徑
+	 * @return 圖片的旋轉角度
+	 */
+	public static int getBitmapDegree(String path) {
+		int degree = 0;
+		try { // 從指定路徑下讀取圖片,並獲取其EXIF資訊
+			ExifInterface exifInterface = new ExifInterface(path);
+			// 獲取圖片的旋轉資訊
+			int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+			switch (orientation) {
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					degree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					degree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					degree = 270;
+					break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return degree;
+	}
+
+	/** * 將圖片按照某個角度進行旋轉 * * @param bm * 需要旋轉的圖片 * @param degree * 旋轉角度 * @return 旋轉後的圖片 */
+	public static Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
+		Bitmap returnBm = null; // 根據旋轉角度,生成旋轉矩陣 
+		Matrix matrix = new Matrix();
+		matrix.postRotate(degree);
+		try { // 將原始圖片按照旋轉矩陣進行旋轉,並得到新的圖片 
+			returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+		} catch (OutOfMemoryError e) {
+		}
+		if (returnBm == null) {
+			returnBm = bm;
+		}
+		if (bm != returnBm) {
+			bm.recycle();
+		}
+		return returnBm;
 	}
 
 }

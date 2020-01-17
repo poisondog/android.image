@@ -42,11 +42,11 @@ public class ImageScale implements Mission<Object> {
 		}
 //		return ImageUtil.resize(UrlUtils.path(url), reqWidth, reqHeight);
 		Bitmap bitmap = ImageUtil.resize(UrlUtils.path(url), reqWidth, reqHeight);
-//		try {
-//			return ImageUtil.applyOrientation(bitmap, ImageUtil.resolveBitmapOrientation(UrlUtils.path(url)));
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			return ImageUtil.applyOrientation(bitmap, ImageUtil.resolveBitmapOrientation(UrlUtils.path(url)));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		return bitmap;
 	}
 

@@ -21,12 +21,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import java.util.List;
 import poisondog.android.image.app.R;
+import poisondog.android.image.ImageDiskCache;
 import poisondog.android.image.ImageFetcher;
+import poisondog.android.image.ImageLoader;
+import poisondog.android.image.ImagePara;
+import poisondog.android.image.ImageUtil;
+import poisondog.android.image.ImageWorker;
 import poisondog.android.pager.PageAdapter;
 import poisondog.android.pager.PageView;
 import poisondog.android.util.GetDisplaySize;
 import poisondog.android.util.GetExternalCacheFolder;
+import poisondog.cache.MissionCache;
 import poisondog.core.Mission;
+import poisondog.net.UrlUtils;
 
 /**
  * @author Adam Huang
@@ -49,7 +56,9 @@ public class PhotoActivity extends Activity {
 
 	class ImageViewFactory implements Mission<Object> {
 		private GetDisplaySize.Size mSize;
-		private ImageFetcher mFetcher;
+//		private ImageFetcher mFetcher;
+		private ImageLoader mLoader;
+		private ImageWorker mBinder;
 		/**
 		 * Constructor
 		 */
@@ -58,7 +67,12 @@ public class PhotoActivity extends Activity {
 			mSize = task.execute(PhotoActivity.this);
 			try{
 				String cache = new GetExternalCacheFolder().execute(PhotoActivity.this);
-				mFetcher = new ImageFetcher(PhotoActivity.this, mSize.getWidth(), mSize.getHeight(), cache);
+//				mFetcher = new ImageFetcher(PhotoActivity.this, mSize.getWidth(), mSize.getHeight(), cache);
+
+				mLoader = new ImageLoader(500, 500, cache);
+				MissionCache mc = new MissionCache(mLoader);
+				mc.setCache(ImageDiskCache.open(cache));
+				mBinder = new ImageWorker(mc);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -67,7 +81,9 @@ public class PhotoActivity extends Activity {
 		public ImageView execute(Object url) throws Exception {
 			ImageView image = new ImageView(PhotoActivity.this);
 			image.setLayoutParams(new ViewGroup.LayoutParams(mSize.getWidth(), mSize.getHeight()));
-			mFetcher.loadImage(url.toString(), image);
+//			mFetcher.loadImage(url.toString(), image);
+			mBinder.execute(new ImagePara(url.toString(), image));
+//			System.out.println(ImageUtil.getBitmapDegree(UrlUtils.path(url.toString())));
 			return image;
 		}
 	}
