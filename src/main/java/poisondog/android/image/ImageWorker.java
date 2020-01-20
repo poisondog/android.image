@@ -36,7 +36,7 @@ import poisondog.core.NoMission;
  */
 public class ImageWorker implements Mission<ImagePara> {
 	private Mission<Object> mMission;
-	private Mission<BitmapDrawable> mHandler;
+	private Mission<Object> mHandler;
 	private Mission<Object> mCancel;
 	private Executor mExecutor;
 //	private final Object mPauseWorkLock = new Object();
@@ -47,7 +47,7 @@ public class ImageWorker implements Mission<ImagePara> {
 	 */
 	public ImageWorker(Mission<Object> mission) {
 		mMission = mission;
-		mHandler = new NoMission<BitmapDrawable>();
+		mHandler = new NoMission<Object>();
 		mCancel = new NoMission<Object>();
 		mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
 //		mExecutor = new ThreadPool().getExecutor();
@@ -55,7 +55,7 @@ public class ImageWorker implements Mission<ImagePara> {
 //		mExecutor = new ThreadPoolExecutor(2, 2, 60000L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>());
 	}
 
-	public void setHandler(Mission<BitmapDrawable> handler) {
+	public void setHandler(Mission<Object> handler) {
 		mHandler = handler;
 	}
 
