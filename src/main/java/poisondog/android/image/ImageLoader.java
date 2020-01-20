@@ -41,11 +41,27 @@ public class ImageLoader implements Mission<Object> {
 	private ImageScale mScale;
 	private CopyTask mTask;
 	private String mUrl;
+	private Mission<String> mFilenameFactory;
 
 	public ImageLoader(int imageWidth, int imageHeight, String destUrl) throws Exception {
 		mScale = new ImageScale(imageWidth, imageHeight);
 		setDestination(destUrl);
 		mFactory = new CopyFactory();
+//		mFilenameFactory = ImageDiskCache.md5FilenameFactory();
+		mFilenameFactory = filenameFactory();
+	}
+
+	public void setFilenameFactory(Mission<String> factory) {
+		mFilenameFactory = factory;
+	}
+
+	public Mission<String> filenameFactory() {
+		return new Mission<String>() {
+			@Override
+			public String execute(String url) {
+				return UrlUtils.filename(url);
+			}
+		};
 	}
 
 	public void setDestination(String url) throws Exception {
@@ -118,7 +134,7 @@ public class ImageLoader implements Mission<Object> {
 	public Mission<Object> getClearHandler(final Object data) {
 		return new Mission<Object>() {
 			@Override
-			public Void execute(Object none) {
+			public Void execute(Object origin) {
 				String url = (String)data;
 				try {
 					IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(url));
