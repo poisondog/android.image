@@ -109,7 +109,7 @@ public class ImageLoader implements Mission<Object> {
 		try{
 			mTask = mFactory.execute(new Pair(getInputStream(url), getOutputStream(createTargetUrl(url))));
 //			mTask.transport();
-			while(mTask.stepWrite() && !mTask.isCancelled());
+			while(!mTask.isCancelled() && mTask.stepWrite());
 
 			return mScale.execute(createTargetUrl(url));
 		}catch(InterruptedIOException e) {
