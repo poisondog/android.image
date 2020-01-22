@@ -8,7 +8,7 @@
  * Detailed information about configuring a multi-project build in Gradle can be found
  * in the user guide at https://docs.gradle.org/2.10/userguide/multi_project_builds.html
  */
-rootProject.name = 'poisondog.android.image'
+rootProject.name = 'android.image'
 
 /*
 // To declare projects as part of a multi-project build use the 'include' method
