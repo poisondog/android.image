@@ -1,6 +1,5 @@
-//project.group = 'poisondog'
-project.group = 'com.walton.cob'
-project.version = '1.2.16'
+project.group = 'poisondog'
+project.version = '2.0.0'
 
 buildscript {
 	repositories {
@@ -41,16 +40,13 @@ repositories {
 	maven {
 		url "https://dl.bintray.com/poisondog/poisondog/"
 	}
-	maven {
-		url "http://nexus.walton.poisondog.com/repository/maven-public/"
-	}
 }
 
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
-	compile 'com.walton.cob:poisondog.commons:8.3.2'
-	compile 'com.walton.cob:android.util:2.9.1@aar'
-	compile 'com.walton.cob:android.pager:0.0.3@aar'
+	compile 'poisondog:poisondog.commons:9.0.0'
+	compile 'poisondog:android.util:3.2.0'
+	compile 'poisondog:android.pager:1.0.0@aar'
 	testCompile 'junit:junit:4.11'
 }
 
