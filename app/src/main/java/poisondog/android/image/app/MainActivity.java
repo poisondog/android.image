@@ -28,24 +28,23 @@ import android.widget.ImageView;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import poisondog.android.image.app.R;
-import poisondog.android.image.ImageWorker;
 import poisondog.android.image.ImageDiskCache;
 import poisondog.android.image.ImageFetcher;
 import poisondog.android.image.ImageLoader;
 import poisondog.android.image.ImagePara;
+import poisondog.android.image.ImageWorker;
+import poisondog.android.image.app.R;
 import poisondog.android.log.AndroidLogger;
 import poisondog.android.util.GetDownloadFolder;
 import poisondog.android.util.GetExternalCacheFolder;
 import poisondog.cache.MissionCache;
-import poisondog.core.Mission;
 import poisondog.log.Log;
 import poisondog.vfs.FileFactory;
-import poisondog.vfs.filter.FileFilter;
-import poisondog.vfs.filter.OnlyImage;
 import poisondog.vfs.IData;
 import poisondog.vfs.IFile;
 import poisondog.vfs.IFolder;
+import poisondog.vfs.filter.FileFilter;
+import poisondog.vfs.filter.OnlyImage;
 
 /**
  * @author Adam Huang
