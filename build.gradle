@@ -1,5 +1,5 @@
 project.group = 'poisondog'
-project.version = '1.2.8'
+project.version = '2.0.0'
 
 buildscript {
 	repositories {
@@ -44,10 +44,11 @@ repositories {
 
 dependencies {
 	compile 'com.android.support:appcompat-v7:25.0.+'
-	compile 'poisondog:poisondog.commons:8.0.0'
-	compile 'poisondog:poisondog.android.util:2.7.1@aar'
-	compile 'poisondog:poisondog.android.pager:0.0.1@aar'
+	compile 'poisondog:poisondog.commons:9.0.0'
+	compile 'poisondog:android.util:3.2.0'
+	compile 'poisondog:android.pager:1.0.0@aar'
 	testCompile 'junit:junit:4.11'
 }
 
 apply from: 'https://raw.githubusercontent.com/poisondog/gradle.tool/master/android/bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/poisondog/gradle.tool/master/android/uploadNexus.gradle'

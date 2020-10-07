@@ -40,11 +40,27 @@ public class ImageFetcher extends ImageResize {
 	private IFolder mDest;
 	private CopyFactory mFactory;
 	private String mUrl;
+	private Mission<String> mFilenameFactory;
 
 	public ImageFetcher(Context context, int imageWidth, int imageHeight, String dest) throws Exception {
 		super(context, imageWidth, imageHeight);
 		setDestination(dest);
 		mFactory = new CopyFactory();
+		mFilenameFactory = ImageDiskCache.md5FilenameFactory();
+//		mFilenameFactory = filenameFactory();
+	}
+
+	public void setFilenameFactory(Mission<String> factory) {
+		mFilenameFactory = factory;
+	}
+
+	public Mission<String> filenameFactory() {
+		return new Mission<String>() {
+			@Override
+			public String execute(String url) {
+				return UrlUtils.filename(url);
+			}
+		};
 	}
 
 	public void setDestination(String url) throws Exception {
@@ -70,6 +86,15 @@ public class ImageFetcher extends ImageResize {
 		return data.getOutputStream();
 	}
 
+	public String createTargetUrl(String url) {
+		try {
+			return mDest.getUrl() + mFilenameFactory.execute(url);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return url;
+	}
+
 	@Override
 	protected Bitmap processBitmap(Object data){
 		if(!(data instanceof String))
@@ -82,9 +107,9 @@ public class ImageFetcher extends ImageResize {
 		}
 		CopyTask task = null;
 		try{
-			task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + UrlUtils.filename(url))));
+			task = mFactory.execute(new Pair(getInputStream(url), getOutputStream(createTargetUrl(url))));
 			task.transport();
-			return super.processBitmap(mDest.getUrl() + UrlUtils.filename(url));
+			return super.processBitmap(createTargetUrl(url));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}catch(Exception e) {
@@ -107,7 +132,7 @@ public class ImageFetcher extends ImageResize {
 			public Void execute(Object none) {
 				String url = (String)data;
 				try {
-					IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(url));
+					IFile f = FileFactory.getFile(createTargetUrl(url));
 					f.delete();
 					System.out.println("Delete cancel file");
 				} catch(Exception e) {

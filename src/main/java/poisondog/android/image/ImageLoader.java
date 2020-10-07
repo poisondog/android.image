@@ -41,11 +41,27 @@ public class ImageLoader implements Mission<Object> {
 	private ImageScale mScale;
 	private CopyTask mTask;
 	private String mUrl;
+	private Mission<String> mFilenameFactory;
 
 	public ImageLoader(int imageWidth, int imageHeight, String destUrl) throws Exception {
 		mScale = new ImageScale(imageWidth, imageHeight);
 		setDestination(destUrl);
 		mFactory = new CopyFactory();
+//		mFilenameFactory = ImageDiskCache.md5FilenameFactory();
+		mFilenameFactory = filenameFactory();
+	}
+
+	public void setFilenameFactory(Mission<String> factory) {
+		mFilenameFactory = factory;
+	}
+
+	public Mission<String> filenameFactory() {
+		return new Mission<String>() {
+			@Override
+			public String execute(String url) {
+				return UrlUtils.filename(url);
+			}
+		};
 	}
 
 	public void setDestination(String url) throws Exception {
@@ -71,6 +87,15 @@ public class ImageLoader implements Mission<Object> {
 		return data.getOutputStream();
 	}
 
+	public String createTargetUrl(String url) {
+		try {
+			return mDest.getUrl() + mFilenameFactory.execute(url);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return url;
+	}
+
 	@Override
 	public Bitmap execute(Object data) {
 		if(!(data instanceof String))
@@ -82,11 +107,11 @@ public class ImageLoader implements Mission<Object> {
 			return mScale.execute(url);
 		}
 		try{
-			mTask = mFactory.execute(new Pair(getInputStream(url), getOutputStream(mDest.getUrl() + UrlUtils.filename(url))));
+			mTask = mFactory.execute(new Pair(getInputStream(url), getOutputStream(createTargetUrl(url))));
 //			mTask.transport();
-			while(mTask.stepWrite() && !mTask.isCancelled());
+			while(!mTask.isCancelled() && mTask.stepWrite());
 
-			return mScale.execute(mDest.getUrl() + UrlUtils.filename(url));
+			return mScale.execute(createTargetUrl(url));
 		}catch(InterruptedIOException e) {
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -108,7 +133,7 @@ public class ImageLoader implements Mission<Object> {
 //	public boolean cancel(boolean mayInterruptIfRunning) {
 //		mTask.cancel();
 //		try {
-//			IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(mUrl));
+//			IFile f = FileFactory.getFile(createTargetUrl(mUrl));
 //			f.delete();
 //		} catch(Exception e) {
 //		}
@@ -118,10 +143,10 @@ public class ImageLoader implements Mission<Object> {
 	public Mission<Object> getClearHandler(final Object data) {
 		return new Mission<Object>() {
 			@Override
-			public Void execute(Object none) {
+			public Void execute(Object origin) {
 				String url = (String)data;
 				try {
-					IFile f = FileFactory.getFile(mDest.getUrl() + UrlUtils.filename(url));
+					IFile f = FileFactory.getFile(createTargetUrl(url));
 					f.delete();
 					System.out.println("Delete cancel file");
 				} catch(Exception e) {

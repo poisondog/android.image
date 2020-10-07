@@ -15,19 +15,20 @@
  */
 package poisondog.android.image;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import poisondog.android.os.AsyncMissionTask;
 import poisondog.android.os.AsyncTask;
 import poisondog.concurrent.ThreadPool;
 import poisondog.core.Mission;
 import poisondog.core.NoMission;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Adam Huang
@@ -35,7 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ImageWorker implements Mission<ImagePara> {
 	private Mission<Object> mMission;
-	private Mission<BitmapDrawable> mHandler;
+	private Mission<Object> mHandler;
 	private Mission<Object> mCancel;
 	private Executor mExecutor;
 //	private final Object mPauseWorkLock = new Object();
@@ -46,15 +47,15 @@ public class ImageWorker implements Mission<ImagePara> {
 	 */
 	public ImageWorker(Mission<Object> mission) {
 		mMission = mission;
-		mHandler = new NoMission<BitmapDrawable>();
+		mHandler = new NoMission<Object>();
 		mCancel = new NoMission<Object>();
-//		mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
-		mExecutor = new ThreadPool().getExecutor();
+		mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
+//		mExecutor = new ThreadPool().getExecutor();
 //		mExecutor = new ThreadPoolExecutor(2, 2, 60000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 //		mExecutor = new ThreadPoolExecutor(2, 2, 60000L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>());
 	}
 
-	public void setHandler(Mission<BitmapDrawable> handler) {
+	public void setHandler(Mission<Object> handler) {
 		mHandler = handler;
 	}
 
@@ -77,10 +78,10 @@ public class ImageWorker implements Mission<ImagePara> {
 
 		CancelPotentialMission cpm = new CancelPotentialMission();
 		if (cpm.execute(data, imageView)) {
-			AsyncMissionTask task = new AsyncMissionTask(new ProcessBitmap(), new UpdateImageView(imageView));
+			AsyncMissionTask task = new AsyncMissionTask(new ProcessBitmap(imageView.getContext()), new UpdateImageView(imageView));
 			task.setCancelMission(mCancel);
 			imageView.setImageDrawable(new MissionDrawable(imageView.getContext().getResources(), para.getLoadingBitmap(), data, task));
-			task.executeOnExecutor(mExecutor, imageView);
+			task.executeOnExecutor(mExecutor, ImageUtil.getImageObject(imageView));
 
 //			try {
 //				Thread.sleep(10L);
@@ -91,24 +92,34 @@ public class ImageWorker implements Mission<ImagePara> {
 		return null;
 	}
 
-	class ProcessBitmap implements Mission<ImageView> {
+	class ProcessBitmap implements Mission<Object> {
+		private Context mContext;
+		/**
+		 * Constructor
+		 */
+		public ProcessBitmap(Context context) {
+			mContext = context;
+		}
 		@Override
-		public BitmapDrawable execute(ImageView image) throws Exception {
-			if (!image.isShown())
-				return null;
+		public BitmapDrawable execute(Object data) throws Exception {
+//			if (!image.isShown())
+//				return null;
 
-			synchronized (mPauseWork) {
-				try {
-					while (mPauseWork)
-						mPauseWork.wait();
-				} catch (InterruptedException e) {}
-				mPauseWork = true;
-				Object data = ImageUtil.getImageObject(image);
-				RecyclingBitmapDrawable result = new RecyclingBitmapDrawable(image.getContext().getResources(), (Bitmap)mMission.execute(data));
-				mPauseWork = false;
-				mPauseWork.notifyAll();
+//			System.out.println("go");
+//			synchronized (mPauseWork) {
+//				try {
+//					while (mPauseWork)
+//						mPauseWork.wait();
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				mPauseWork = true;
+//				Object data = ImageUtil.getImageObject(image);
+				RecyclingBitmapDrawable result = new RecyclingBitmapDrawable(mContext.getResources(), (Bitmap)mMission.execute(data));
+//				mPauseWork = false;
+//				mPauseWork.notifyAll();
 				return result;
-			}
+//			}
 
 		}
 	}

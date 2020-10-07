@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import poisondog.cache.Cache;
 import poisondog.commons.HashFunction;
+import poisondog.core.Mission;
 import poisondog.net.UrlUtils;
 import poisondog.vfs.FileFactory;
 import poisondog.vfs.IData;
@@ -57,7 +58,20 @@ public class ImageDiskCache implements Cache<String> {
 	private synchronized String getPath(String key) throws Exception {
 		if (key == null)
 			return "";
-		return UrlUtils.path(mCache.getUrl() + HashFunction.md5(key));
+		return UrlUtils.path(mCache.getUrl() + getFilename(key));
+	}
+
+	public static String getFilename(String url) {
+		return HashFunction.md5(url);
+	}
+
+	public static Mission<String> md5FilenameFactory() {
+		return new Mission<String>() {
+			@Override
+			public String execute(String url) {
+				return HashFunction.md5(url);
+			}
+		};
 	}
 
 	@Override
